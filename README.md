@@ -1,49 +1,61 @@
-# Microsoft Cloud Workshop template *(replace with workshop name)*
-*Please provide an introduction to the workshop. For example:*
+# Leveraging Azure Digital Twins in a supply chain
 
-Trey Research Inc. looks at the old way of doing things in retail and introduces innovative experiences that delight customers and drive sales. Their latest initiative focuses on intelligent vending machines that support commerce, engagement analytics, and intelligent promotions. 
+Azure Digital Twins (ADT) is a platform as a service (PaaS) offering that enables creating knowledge graphs based on digital models of entire environments. These environments could be buildings, factories, farms, energy networks, railways, stadiums, and more—even entire cities. These digital models can help gain insights that drive better products, optimized operations, reduced costs, and breakthrough customer experiences. Azure Digital Twins facilitates asset connectivity, such as connecting IoT devices with existing business systems. ADT also offers a robust event system to build dynamic business logic and data processing. Integrate with Azure data, analytics, and AI services to help you track the past and then predict the future, all in a scalable and secure manner.
 
-Month, year (date last reviewed)
+Contoso Apparel is a large multinational clothing manufacturer. Their environment consists of several factories, warehouses, storefronts, and logistics infrastructure. Multiple telemetry points are measured to ensure the highest quality level in their products, such as temperature, vibration, location, and humidity. Of these readings, maintaining humidity within the range of x and y at all supply chain levels is the most critical. Due to mold issues, humidity has a direct correlation to the quality of the delivered consumer end-product.
+
+Contoso Apparel is looking to implement digital twins to model their existing supply chain environment end-to-end. Their goals are:
+
+    -  to visualize the relationship between their processes, products, equipment, factories, shipping logistics, warehouses, and storefronts.
+
+    -  to gain insight into the current state of the supply chain.
+
+    - analyze historical data to track successful product deliveries or determine the root cause of unsuccessful deliveries.
+
+    -  to automate mitigating measures should an anomalous event occur. For example, product manufacturing could be re-routed to a secondary 'failover' factory should there be an outage at the original facility.
+    
+    - to model potential 'what if' process changes and determine their overall impact without experimenting with or impacting the current supply chain.
+
+April 2021
 
 ## Target audience
-*Please list the target audience for this workshop. For example:*
--	Application developer
--	Infrastructure architect
--	Database administrator
--	AI developer
--	Data scientist
+
+- Application developer
+
+- IoT developer
 
 ## Abstracts
-*Please provide descriptions of the overall workshop, the whiteboard design session and hands on lab. For example:*
 
 ### Workshop
-In this workshop, you will look at the process of migrating an on-premises data warehouse to Azure SQL Data Warehouse. Throughout the whiteboard design session and hands-on lab, you will look at the planning process for data warehouse migration, identifying schema and data incompatibilities, efficiently migrating data from on-premises databases to the cloud, data distribution in Azure SQL Data Warehouse, migrating ETL jobs to Azure Data Factory, and supporting ad-hoc workloads in an Azure SQL Data Warehouse through Azure Analysis Services.
 
-At the end of this workshop, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+In this workshop, you will learn how to interpret and author Digital Twin Definition Language (DTDL) documents to model a supply chain environment. Using the Digital Twins Explorer, you will visualize and query the knowledge graph consisting of defined digital twins. Through device simulation, realistic telemetry is generated and ingested into an Azure IoT hub where Azure Stream Analytics will monitor for humidity anomalies. You will also integrate Azure Digital Twins with Azure Time Series Insights that will assist in visualizing historical and present data. Lastly, you will leverage Azure Digital Twins to implement factory failover using event routing.
 
-### Whiteboard design session *(this will go in the readme and in the WDS document)*
-In this whiteboard design session, you will work in a group to look at the process of migrating an on-premises data warehouse to Azure SQL Data Warehouse. The design session will cover planning for a data warehouse migration, data and schema preparation, data loading, optimizing the data distribution, and building a solution to support ad-hoc queries.
+At the end of this workshop, you will be better able to explain the benefits of Azure Digital Twins as well as architect an analytical IoT solution.
 
-At the end of this whiteboard design session, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+### Whiteboard design session
+In this whiteboard design session, you will work in a group to evaluate Contoso's goals and design an IoT-based supply chain solution that uses the optimal combination of Azure tools and services that will fulfill their needs. You will also model their physical and logical environment to identify elements along with their properties and define the relationships between them. You will guide Contoso on deploying these models to Azure Digital Twins, how to leverage them and keep them up-to-date.
 
-### Hands-on lab *(this will go in the readme and in the HOL document)*
-In this hands-on lab, you will migrate an existing on-premises enterprise data warehouse to the cloud. You will investigate the current data warehouse to identify any incompatibilities, you will export the data from the on-premises data warehouse and transfer it to Azure Blob Storage. Then you will load the data into the warehouse. Finally, you will integrate the warehouse by migrating ETL to Azure Data Factory and supporting ad-hoc access by implementing Azure Analysis Services.
+At the end of this whiteboard design session, you will be better able to design an end-to-end Azure IoT supply chain solution from telemetry ingestion to data insights, all while leveraging Azure Digital Twins.
 
-At the end of this hands-on lab, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+### Hands-on lab
+In this hands-on lab, you will implement an Azure IoT solution for a supply chain scenario. You will learn to interpret and author Digital Twin Definition Language (DTDL) that models physical and logical elements of an environment. You will use DTDL to represent an element's properties, telemetry, components, and relationships. Next, you will learn how to deploy the models into Azure Digital Twins and visualize them using Azure Digital Twins Explorer. You will learn how to leverage Azure Digital Twins by deploying an end-to-end IoT solution, including identifying anomalies and automating automatic failover of factory work using eventing.
+
+At the end of this hands-on lab, you will be better able to implement an end-to-end Azure IoT supply chain solution from telemetry ingestion to data insights, all while leveraging Azure Digital Twins.
 
 ## Azure services and related products
-*Please list the services and products that are highlighted in the workshop. For example:*
--	Azure SQL Data Warehouse
--	Azure Data Factory
--	Azure Analysis Services
--	Azure Storage
-
-## Azure solutions
-*This is an internal reference and will be updated by project PM.*
+- Azure Digital Twins
+- Azure Digital Twins Explorer
+- Azure IoT Hub
+- Azure Functions
+- Azure Stream Analytics
+- Azure Logic Apps
+- Azure Event Hub
+- Powershell
 
 ## Related references
-*This should be a list of and links to prereqs, architectural diagrams, supporting docs, or briefing decks related to the material.* 
 - [MCW](https://github.com/Microsoft/MCW)
+- [Azure Digital Twins documentation](https://docs.microsoft.com/en-us/azure/digital-twins/)
+- [Azure Digital Twins learning path](https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/)
 
 ## Help & Support
 
