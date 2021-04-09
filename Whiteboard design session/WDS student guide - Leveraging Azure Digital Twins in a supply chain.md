@@ -201,13 +201,13 @@ Directions:
 
 7. Tables switch roles and repeat Steps 2-6.
 
-##  Wrap-up
+## Wrap-up
 
 Timeframe: 15 minutes
 
 Directions: Tables reconvene with the larger group to hear the facilitator/SME share the preferred solution for the case study.
 
-##  Additional references
+## Additional references
 
 |    |            |
 |----------|:-------------:|
@@ -216,6 +216,8 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | Azure Digital Twins documentation   | [https://docs.microsoft.com/en-us/azure/digital-twins/](https://docs.microsoft.com/en-us/azure/digital-twins/)  |
 | Azure Digital Twins learning path | [https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/](https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/)  |
 | Digital Twin Definition Language (DTDL) | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models) |
+| Azure Digital Twins Ontologies | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies) |
+| Azure Digital Twins Explorer | [https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/](https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/) |
 | Azure Stream Analytics anomaly detection  | [https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection)  |
 | Azure IoT Hub Device Provisioning Service  | [https://docs.microsoft.com/en-us/azure/iot-dps/](https://docs.microsoft.com/en-us/azure/iot-dps/)   |
 | Azure IoT Hub documentation | [https://docs.microsoft.com/en-us/azure/iot-hub/](https://docs.microsoft.com/en-us/azure/iot-hub/) |
