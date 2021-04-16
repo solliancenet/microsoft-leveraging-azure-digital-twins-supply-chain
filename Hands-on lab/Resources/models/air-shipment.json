@@ -1,0 +1,7 @@
+{
+  "@id": "dtmi:com:contoso:airshipment;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Air Shipment",
+  "extends": ["dtmi:com:contoso:shipment;1"]
+}

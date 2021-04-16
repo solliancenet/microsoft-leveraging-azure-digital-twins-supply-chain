@@ -216,6 +216,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | Azure Digital Twins documentation   | [https://docs.microsoft.com/en-us/azure/digital-twins/](https://docs.microsoft.com/en-us/azure/digital-twins/)  |
 | Azure Digital Twins learning path | [https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/](https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/)  |
 | Digital Twin Definition Language (DTDL) | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models) |
+| DTDL Specification | [https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md) |
 | Azure Digital Twins Ontologies | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies) |
 | Azure Digital Twins Explorer | [https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/](https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/) |
 | Azure Stream Analytics anomaly detection  | [https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection)  |

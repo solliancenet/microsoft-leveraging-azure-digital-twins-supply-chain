@@ -344,6 +344,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 | Azure Digital Twins documentation   | [https://docs.microsoft.com/en-us/azure/digital-twins/](https://docs.microsoft.com/en-us/azure/digital-twins/)  |
 | Azure Digital Twins learning path | [https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/](https://docs.microsoft.com/en-us/learn/paths/develop-azure-digital-twins/)  |
 | Digital Twin Definition Language (DTDL) | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models) |
+| DTDL Specification | [https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md) |
 | Azure Digital Twins Ontologies | [https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-ontologies) |
 | Azure Digital Twins Explorer | [https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/](https://docs.microsoft.com/en-us/samples/azure-samples/digital-twins-explorer/digital-twins-explorer/) |
 | Azure Stream Analytics anomaly detection  | [https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-machine-learning-anomaly-detection)  |
@@ -448,9 +449,13 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
     Contoso Apparel should use IoT Hub, or the combination of IoT Hub and the Device Provisioning Service (DPS) to register and authenticate their IoT devices.
 
+    ![An IoT Device communicates with DPS to register, authenticate and provide telemetry to Azure Digital Twins via IoT Hub ingestion.](media/dps.png)
+
 2. How should the IoT telemetry data be ingested into Azure?
 
-    Data should be ingested via IoT Hub.
+    Data should be ingested via IoT Hub alongside an Azure Function compute resource that processes the telemetry and updates the digital twin model.
+
+    ![An IoT Hub ](media/telemetryupdateofadt.png)
 
 3. How would Contoso Apparel monitor for humidity anomalies in near real-time?
 
@@ -466,7 +471,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 1. How do you suggest keeping the environment model up-to-date with the real world state?
 
-    To keep the live execution environment of Azure Digital Twins up to date with the real world, you can use IoT Hub to connect your solution to IoT and IoT Edge devices. These hub-managed devices are represented as part of your twin graph, and provide the data that drives your model. You can also update Azure Digital Twins from other data sources that are able to use REST APIs (and SDKs) or with connectors to other services like Logic Apps.
+    To keep the live execution environment of Azure Digital Twins up to date with the real world, you can use IoT Hub and an Azure Function to connect your solution to IoT and IoT Edge devices. These hub-managed devices are represented as part of your twin graph and provide the data that drives your model. You can also update Azure Digital Twins from other data sources that are able to use REST APIs (and SDKs) or with connectors to other services like Logic Apps.
 
 *Business logic implementation*
 
@@ -493,4 +498,3 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 ## Customer quote (to be read back to the attendees at the end)
 
 \[insert your custom workshop content here . . . \]
-

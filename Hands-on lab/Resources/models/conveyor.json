@@ -1,0 +1,13 @@
+{
+  "@id": "dtmi:com:contoso:conveyor;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Conveyor",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "Speed",
+      "schema": "integer"
+    }
+  ]
+}
