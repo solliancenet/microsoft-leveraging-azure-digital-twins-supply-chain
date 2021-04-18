@@ -50,13 +50,15 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Exercise 5: Keeping Azure Digital Twin instances up-to-date](#exercise-5-keeping-azure-digital-twin-instances-up-to-date)
     - [Task 1: Manually update the state of a digital twin using the CLI](#task-1-manually-update-the-state-of-a-digital-twin-using-the-cli)
     - [Task 2: Manually update the state of a digital twin using the Azure Digital Twins Explorer](#task-2-manually-update-the-state-of-a-digital-twin-using-the-azure-digital-twins-explorer)
-    - [Task 3: Using a logic application to trigger Azure Digital Twin updates](#task-3-using-a-logic-application-to-trigger-azure-digital-twin-updates)
-  - [Exercise 6: Simulating real-world telemetry](#exercise-6-simulating-real-world-telemetry)
-    - [Task 1: Task name](#task-1-task-name)
-  - [Exercise 7: Visualizing incoming data with Azure Time Series Insights](#exercise-7-visualizing-incoming-data-with-azure-time-series-insights)
-    - [Task 1: Task name](#task-1-task-name-1)
+    - [Task 3: Using a logic application to trigger Azure Digital Twin updates for shipments](#task-3-using-a-logic-application-to-trigger-azure-digital-twin-updates-for-shipments)
+    - [Task 4: Simulating a real device and updating digital twins via telemetry ingestion](#task-4-simulating-a-real-device-and-updating-digital-twins-via-telemetry-ingestion)
+  - [Exercise 6: Visualizing incoming data with Azure Time Series Insights](#exercise-6-visualizing-incoming-data-with-azure-time-series-insights)
+    - [Task 1: Configure security of Time Series Insights](#task-1-configure-security-of-time-series-insights)
+    - [Task 2: Create a route from Azure Digital Twins for Time Series Insights](#task-2-create-a-route-from-azure-digital-twins-for-time-series-insights)
+    - [Task 3: View incoming telemetry using Time Series Insights](#task-3-view-incoming-telemetry-using-time-series-insights)
   - [After the hands-on lab](#after-the-hands-on-lab)
     - [Task 1: Delete resource group](#task-1-delete-resource-group)
+    - [Task 2: Delete the Active Directory app registration](#task-2-delete-the-active-directory-app-registration)
 <!-- /TOC -->
 
 # Leveraging Azure Digital Twins in a supply chain hands-on lab step-by-step
@@ -71,16 +73,24 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 ## Solution architecture
 
-![](media/solution_architecture.png)
+![The solution architecture diagram is shown as explained in the following paragraph.](media/solution_architecture.png "Solution architecture")
+
+IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service. You can review this code in the `Hands-on lab/Resources/azurefunctionscode/IoTHubToTwins.cs` file. A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. The source code for this second Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/SignalRFunctions.cs` file. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function. The source code for this third Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/ProcessDTUpdateToTSI.cs` file.
 
 ## Requirements
 
 1. Azure Subscription
+
 2. [Azure CLI 2.3.1+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
 3. PowerShell ([macOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6&preserve-view=true)) (Windows: PowerShell is built in)
+
 4. [Visual Studio Code](https://code.visualstudio.com/)
+
 5. [.NET Core 3.1](https://dotnet.microsoft.com/download)
+
 6. [C# Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+
 7. [Node.js 10+](https://nodejs.org/)
 
 ## Before the hands-on lab
@@ -97,7 +107,7 @@ In this exercise, you will be assisting Contoso Apparel in defining a model repr
 
 ### Task 1: The components of a model
 
-At the top-level, a DTDL model defines an interface that encapsulates the rest of the model definition. A DTDL model interface may contain zero, one, or many of each of the following fields:
+At the top level, a DTDL model defines an interface that encapsulates the rest of the model definition. A DTDL model interface may contain zero, one, or many of each of the following fields:
 
 | Field | Description |
 |-------|-------------|
@@ -106,7 +116,7 @@ At the top-level, a DTDL model defines an interface that encapsulates the rest o
 | Component |Components allow you to build your model interface as an assembly of other interfaces. Use a component to describe something that is an integral part of your solution but doesn't need a separate identity, and doesn't need to be created, deleted, or rearranged in the twin graph independently. |
 | Relationship |  Relationships let you represent how a digital twin can be involved with other digital twins. Relationships can represent different semantic meanings, such as contains ("floor contains room"), cools ("hvac cools room"), isBilledTo ("compressor is billed to user"), etc. Relationships allow the solution to provide a graph of interrelated entities. |
 
-It is essential to distinguish between properties and telemetry. With properties, it has a backing store so that you can read and query the data fields. Telemetry is the stream of data from an IoT device that contains things like temperature and humidity values. These values are not stored on the device itself. You are not able to query for the latest temperature value from a telemetry field. Instead, you'll need to have a data ingress function listen to the device's messages and take actions as they arrive. Based on the business rules defined by the logic of the ingress function, you can then update a property based on the incoming telemetry (or property events) from the device using the Azure Digital Twins API.
+It is essential to distinguish between properties and telemetry. With properties, it has a backing store so that you can read and query the data fields. Telemetry is the stream of data from an IoT device that contains things like temperature and humidity values. These values are not stored on the device itself. You are not able to query for the latest temperature value from a telemetry field. Instead, you'll need to have a data ingress function listen to the device's messages, and take actions as they arrive. Based on the business rules defined by the logic of the ingress function, you can then update a property based on the incoming telemetry (or property events) from the device using the Azure Digital Twins API.
 
 Here is an example of a Planet model. Model files should be saved with the **.json** extension. This example demonstrates the proper syntax in defining the Planet interface, properties, telemetry, relationship, and component. Take note that when defining a component interface (Crater in this example), it should be defined in the same array as the interface that uses it (Planet).
 
@@ -257,7 +267,7 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
 
 ### Task 2: Ontologies overview
 
-In the previous task, we created a model definition of a storeroom manually. In this task, we'll investigate pre-existing model sets aligned to specific industries, also referred to as an ontology. Currently there exists two open-source DTDL ontologies that leverage industry standards in their model definitions. These are the [real estate industry smart building](https://github.com/Azure/opendigitaltwins-building), and the [smart city industry](https://github.com/Azure/opendigitaltwins-smartcities). You can take advantage of these existing ontologies to form the basis of your model definitions. You have the ability to adopt them as-is and to extend them as needed using model inheritance.
+In the previous task, we created a model definition of a storeroom manually. In this task, we'll investigate pre-existing model sets aligned to specific industries, also referred to as an ontology. Currently, there are two open-source DTDL ontologies that leverage industry standards in their model definitions. These are the [real estate industry smart building](https://github.com/Azure/opendigitaltwins-building), and the [smart city industry](https://github.com/Azure/opendigitaltwins-smartcities). You can take advantage of these existing ontologies to form the basis of your model definitions. You can adopt them as-is and extend them as needed using model inheritance.
 
 1. An ontology provides a common representation of places, infrastructure, and assets to enable interoperability and data sharing across multiple domains. In a new browser window or tab, visit the following URL [https://github.com/Azure/opendigitaltwins-building](https://github.com/Azure/opendigitaltwins-building).
 
@@ -265,9 +275,9 @@ In the previous task, we created a model definition of a storeroom manually. In 
 
 3. Remaining on this website, navigate into the **Ontology/Space/Building/Building.json** file to view the definition of a building. Note that this model extends the **Space** definition located at **Ontology/Space/Space.json**.
 
-4. You are also able to visualize and interact with the **RealEstateCore** ontology by opening the following url in a new tab or window [http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/](http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/).
+4. You are also able to visualize and interact with the **RealEstateCore** ontology by opening the following URL in a new tab or window [http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/](http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/).
 
-    ![The RealEstateCore model visualization graph is shown.](media/realestatecorevisualization.png "RealEstateCore model visualization")
+    ![The RealEstateCore model visualization graph is displayed.](media/realestatecorevisualization.png "RealEstateCore model visualization")
 
 5. When you have finished investigating the **RealEstateCore** ontology, you may close this tab. You may optionally investigate the [**Smart Cities** ontology](https://github.com/Azure/opendigitaltwins-smartcities).
 
@@ -295,7 +305,7 @@ It is recommended that you validate your DTDL models offline prior to loading th
    cd .\DTDLValidator-Sample\DTDLValidator\
    ```
 
-8. Copy the full path to the **models** folder of this lab (`C:\PATH_TO_LAB_FILES\Hands-on lab\Resources\models`) to a text editor for use in the next step.
+8. Copy the full path to the **models** folder of this lab (`Hands-on lab/Resources/models`) to a text editor for use in the next step.
 
 9. In the Visual Studio Code terminal window, execute the following command (replacing **MODEL_FOLDER_PATH** with the full path to your models folder copied in the previous step, keeping the quote characters intact):
 
@@ -303,15 +313,15 @@ It is recommended that you validate your DTDL models offline prior to loading th
     dotnet run -d "MODEL_FOLDER_PATH"
     ```
 
-10. You should get a message indicating that all files in the models folder are valid.
+10. You should get a message indicating that all files in the **models** folder are valid.
 
-  ![A portion of the Visual Studio Code terminal window is shown with a message indicating that all files have been validated and that the DTDL is valid.](media/validationtoolresults.png "Visual Studio Code Terminal Window Output")
+  ![A portion of the Visual Studio Code terminal window displays with a message indicating that all files have been validated and that the DTDL is valid.](media/validationtoolresults.png "Visual Studio Code Terminal Window Output")
 
 ## Exercise 2: Loading models into Azure Digital Twins
 
 Duration: X minutes
 
-In the previous exercise we learned how to author and validate DTDL models. In this exercise, we will load these models into the Azure Digital Twins Azure service.
+In the previous exercise, we learned how to author and validate DTDL models. In this exercise, we will load these models into the Azure Digital Twins Azure service.
 
 ### Task 1: Configure Azure Digital Twins permissions
 
@@ -321,7 +331,7 @@ Specific permissions are required to have the ability to maintain models in the 
 
 2. Select the Azure Digital Twins service from the list named **{PREFIX}digtwins**, where `PREFIX` is the generated value or the prefix you specified in the **Before the HOL** steps.
 
-    ![The resource group service listing is shown with the Azure Digital Twins service selected.](media/resourcegrouplist_digitaltwins.png "Resource group service listing")
+    ![The resource group service listing displays with the Azure Digital Twins service selected.](media/resourcegrouplist_digitaltwins.png "Resource group service listing")
 
 3. From the left menu, select **Access control (IAM)**, then expand the **+ Add** button in the toolbar and select **Add role assignment**.
 
@@ -329,21 +339,21 @@ Specific permissions are required to have the ability to maintain models in the 
 
 4. In the **Add role assignment** blade, select the **Azure Digital Twins Data Owner** role, and search for and select your Azure Active Directory account (search for your login email address). Select **Save**.
 
-    ![The Add role assignment blade is shown with an email in the Select field and a selected member chosen. The Save button is highlighted.](media/digtwins_addroleassignment.png "Add role assignment blade")
+    ![The Add role assignment blade displays with an email in the Select field and a selected member chosen. The Save button is highlighted.](media/digtwins_addroleassignment.png "Add role assignment blade")
 
 ### Task 2: Loading models using the CLI
 
-Azure Digital Twins has a command set for the Azure CLI that you can use to perform most management functions with the service. The commands relative to digital twins are part of the larger [Azure IoT extension for Azure CLI](https://github.com/Azure/azure-iot-cli-extension). You can review the digital twins specific command reference here: [az dt command reference](https://docs.microsoft.com/en-us/cli/azure/dt).
+Azure Digital Twins has a command set for the Azure CLI that you can use to perform most management functions with the service. The commands relative to digital twins are part of the larger [Azure IoT extension for Azure CLI](https://github.com/Azure/azure-iot-cli-extension). You can review the digital twins command reference here: [az dt command reference](https://docs.microsoft.com/en-us/cli/azure/dt).
 
 1. In the [Azure portal](https://portal.azure.com), open the resource group you created for this lab.
 
 2. Select the **Azure Digital Twins** service from the list named **{PREFIX}digtwins**, where `PREFIX` is the generated value or the prefix you specified in the **Before the HOL** steps.
 
-    ![The resource group service listing is shown with the Azure Digital Twins service selected.](media/resourcegrouplist_digitaltwins.png "Resource group service listing")
+    ![The resource group service listing displays with the Azure Digital Twins service selected.](media/resourcegrouplist_digitaltwins.png "Resource group service listing")
 
-3. On the **Overview** screen, make note of the values for **Resource group**, **Host name**, and the name of the Azure Digital Twins instance. You should store these values in a text editor for later use. Please note that your values will differ from the screenshot below.
+3. On the **Overview** screen, record the values for **Resource group**, **Host name**, and the name of the Azure Digital Twins instance. You should store these values in a text editor for later use. Please note that your values will differ from the screenshot below.
 
-   ![The Azure Digital Twins Overview screen is shown with the resource name, Resource group, and Host name values highlighted.](media/digitaltwins_overview.png "Azure Digital Twins Overview")
+   ![The Azure Digital Twins Overview screen displays with the resource name, Resource group, and Host name values highlighted.](media/digitaltwins_overview.png "Azure Digital Twins Overview")
 
 4. Open a command prompt on your local machine.
 
@@ -359,7 +369,7 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
     az login
     ```
 
-7. Change the current directory to the **models** folder of this lab (`C:\PATH_TO_LAB_FILES\Hands-on lab\Resources\models`) by issuing the following command(replacing **MODEL_FOLDER_PATH** with the full path to your models folder, retaining the quote characters):
+7. Change the current directory to the **models** folder of this lab (`Hands-on lab/Resources/models`) by issuing the following command(replacing **MODEL_FOLDER_PATH** with the full path to your models folder, retaining the quote characters):
   
     ```Bash
     cd "MODEL_FOLDER_PATH"
@@ -381,11 +391,11 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
     az dt model list -n ADT_INSTANCE_NAME
     ```
 
-10. Keep this console window open for further CLI tasks later on in this lab.
+10. Keep this CLI command window open for additional tasks later on in this lab.
 
 ### Task 3: Setup the Azure Digital Twins Explorer application
 
-The Azure Digital Twins Explorer is a Node.js based single page web application that you will run on your computer. This application connects to an Azure Digital Twins instance and provides features to manage models and twins instances (along with their properties). Azure Digital Twins Explorer provides visualizations of the twins graph, the ability to edit twin instance properties, and to run queries across the twins graph.
+The Azure Digital Twins Explorer is a Node.js-based single-page web application that you will run on your computer. This application connects to an Azure Digital Twins instance and provides features to manage models and twins instances (along with their properties). Azure Digital Twins Explorer provides visualizations of the twins graph, editing twin instance properties and running queries across the twins graph.
 
 1. In a new tab or web browser window, visit the [Azure Digital Twins Explorer GitHub repository](https://github.com/Azure-Samples/digital-twins-explorer/tree/main/).
 
@@ -407,21 +417,21 @@ The Azure Digital Twins Explorer provides an intuitive user interface to manage 
 
 2. In the **MODELS** blade, select the **Upload a Model** button.
 
-    ![The Azure Digital Twins Explorer MODELS blade is shown with the Upload a Model button highlighted.](media/adte_uploadamodelbutton.png "Azure Digital Twins Explorer Upload a Model")
+    ![The Azure Digital Twins Explorer MODELS blade displays with the Upload a Model button highlighted.](media/adte_uploadamodelbutton.png "Azure Digital Twins Explorer Upload a Model")
 
-3. Navigate to the lab **models** folder (`C:\PATH_TO_LAB_FILES\Hands-on lab\Resources\models`). Select all the files with the ***.json** extension in this folder. The dialog allows uploading multiple files at once.
+3. Navigate to the lab **models** folder (`Hands-on lab/Resources/models`). Select all the files with the ***.json** extension in this folder. The dialog allows uploading multiple files at once.
 
 4. Verify that you have all 11 models loaded to the Azure Digital Twins instance.
 
-    ![The Azure Digital Twins Explorer MODELS blade is shown with 11 models listed.](media/adte_elevenmodels.png "Azure Digital Twins Explorer models listing")
+    ![The Azure Digital Twins Explorer MODELS blade displays with 11 models listed.](media/adte_elevenmodels.png "Azure Digital Twins Explorer models listing")
 
-5. Keep the Azure Digital Twins Explorer web application open for future tasks.
+5. Keep the Azure Digital Twins Explorer web application open for later tasks.
 
 ## Exercise 3: Creating digital twin instances to build an environment knowledge graph
 
 Duration: X minutes
 
-Now that we've modeled the entities in our environment, we are ready to create digital twin instances based on these models to represent the real world artifacts. In this exercise, we will continue assisting Constoso Apparel with defining four of the storeroom instances that exist in their environment.
+Now that we've modeled the entities in our environment, we are ready to create digital twin instances based on these models to represent the real-world artifacts. In this exercise, we will continue assisting Constoso Apparel with defining four of the storeroom instances that exist in their environment.
 
 ### Task 1: Create digital twin instances using the CLI
 
@@ -447,7 +457,7 @@ Now that we've modeled the entities in our environment, we are ready to create d
 
     ![A portion of a command window output is displayed showing a results array with two storeroom digital twins instances returned.](media/cli_queryresults_alltwins.png "Digital Twins query output")
 
-5. Keep this command window open for additional CLI tasks later on in this lab.
+5. Keep this CLI command window open for additional tasks later on in this lab.
 
 ### Task 2: Create a digital twin instance using the Azure Digital Twins Explorer
 
@@ -455,115 +465,398 @@ We will use the Azure Digital Twins Explorer web application to create two addit
 
 1. Return to the Azure Digital Twins Explorer web application.
 
-2. In the **MODELS** blade, locate the **StoreRoom** model, and select the **Create a Twin** button.
+2. In the **MODELS** blade, locate the **StoreRoom** model and select the **Create a Twin** button.
 
-    ![A section of the MODELS blade is shown with the Create a Twin button highlighted on the StoreRoom model item.](media/adte_createatwinbutton_storeroom.png "Create a Twin button")
+    ![A section of the MODELS blade displays with the Create a Twin button highlighted on the StoreRoom model item.](media/adte_createatwinbutton_storeroom.png "Create a Twin button")
 
 3. We will now create a digital twin for the storeroom identified by **SR90638**. In the modal dialog that displays, enter `SR90638`, then select **Save**.
 
-    ![A modal dialog is shown with the value SR90638 entered in the New Twin Name text field.](media/adte_createtwin_SR90638.png "New Twin Name modal dialog")
+    ![A modal dialog displays with the value SR90638 entered in the New Twin Name text field.](media/adte_createtwin_SR90638.png "New Twin Name modal dialog")
 
 4. Repeat the previous step and create a digital twin for the storeroom identified by **SR90639**.
 
 5. You should see the two storeroom instances show on the **TWIN GRAPH** canvas in the web application.
 
-   ![The TWIN GRAPH canvas is shown with two circles representing both storerooms that were defined in this task.](media/adte_twingraph_twostorerooms.png "TWIN GRAPH")
+   ![The TWIN GRAPH canvas displays with two circles representing both storerooms that were defined in this task.](media/adte_twingraph_twostorerooms.png "TWIN GRAPH")
 
-6. You may be wondering where the other two storerooms are that we had defined in the CLI. To refresh the TWIN GRAPH, select the **Run Query** button from the QUERY EXPLORER section near the top of the screen. This will query the Azure Digital Twins instance and return all digital twins instances.
+6. You may be wondering where the other two storerooms are that we had defined in the CLI. To refresh the TWIN GRAPH, select the **Run Query** button from the QUERY EXPLORER section near the top of the screen. This operation queries the Azure Digital Twins service and returns all digital twins instances.
 
-    ![The TWIN GRAPH canvas is shown with four circles representing all the storeroom digital twins that have been defined.](media/adte_twingraph_fourstorerooms.png "TWIN GRAPH")
+    ![The TWIN GRAPH canvas displays with four circles representing all the storeroom digital twins that are defined.](media/adte_twingraph_fourstorerooms.png "TWIN GRAPH")
 
-7. Keep the Azure Digital Twins Explorer web application open for future lab tasks.
+7. Keep the Azure Digital Twins Explorer web application open for later tasks.
 
 ### Task 3: Importing digital twin instances using a spreadsheet
 
-Creating digital twin instances one-by-one via CLI and in the Azure Digital Twins could be a lengthy task. Lucky for us, we are able to define and provide initialization details for bulk import via a spreadsheet.
+Creating digital twin instances one by one via CLI and in the Azure Digital Twins could be a lengthy task. Lucky for us, we can define and provide initialization details for bulk import via a spreadsheet.
 
-1. In Azure Digital Twins Explorer select the **Import Graph** button from the **TWIN GRAPH** canvas upper right toolbar.
+1. In Azure Digital Twins Explorer, select the **Import Graph** button from the **TWIN GRAPH** canvas upper right toolbar.
 
-    ![The TWIN GRAPH toolbar is shown with the Import Graph button highlighted.](media/adte_importgraph_button.png "TWIN GRAPH toolbar")
+    ![The TWIN GRAPH toolbar displays with the Import Graph button highlighted.](media/adte_importgraph_button.png "TWIN GRAPH toolbar")
 
-2. In the open file dialog, navigate to the lab **models** folder (`C:\PATH_TO_LAB_FILES\Hands-on lab\Resources\models`). Select the `FullTwins.xlsx` file.
+2. In the open file dialog, navigate to the lab **models** folder (`Hands-on lab/Resources/models`). Select the `FullTwins.xlsx` file.
 
-3. Select the **Save** icon at the upper right of the IMPORT canvas, this canvas shows a preview of the graph.
+3. Select the **Save** icon at the upper right of the **IMPORT** canvas; this canvas shows a preview of the graph.
 
-    ![The IMPORT graph preview is shown with many additional nodes.](media/adte_graphimport_result.png "IMPORT graph")
+    ![The IMPORT graph preview displays with many additional nodes.](media/adte_graphimport_result.png "IMPORT graph")
 
 4. Return to the **TWIN GRAPH**, and select the **Run Query** button from the **QUERY EXPLORER** to refresh the graph. Give this refresh a few moments to run.
 
-5. Allow a few moments for the import to complete. You will then see a dialog indicating a successful import.
+5. Allow a few moments for the import to complete, then a dialog indicating a successful import will display.
 
-    ![The Import Successful dialog is shown indicating 152 twins were imported along with 162 relationships](media/adte_graphimportsuccess_dialog.png "Azure Digital Twins Explorer Import Successful dialog")
+    ![The Import Successful dialog displays indicating 152 twins have been imported along with 162 relationships](media/adte_graphimportsuccess_dialog.png "Azure Digital Twins Explorer Import Successful dialog")
 
 6. Your graph should look substantially larger now.
 
-   ![The TWINS GRAPH is updated with many additional nodes.](media/adte_fulltwinsgraph.png "Updated TWINS GRAPH")
+   ![The TWINS GRAPH displays with many additional nodes.](media/adte_fulltwinsgraph.png "Updated TWINS GRAPH")
 
-7. The graph can be made even more representational of the physical world using easy to identify iconography. To add icons representing each of our models, select the **Upload Model Images** button on the **MODELS** blade toolbar.
+7. You can make the graph even more representative of the physical world by adding easy-to-identify iconography. To add icons representing each of our models, select the **Upload Model Images** button on the **MODELS** blade toolbar.
 
-    ![The MODELS blade toolbar menu is shown with the Upload Model Images button highlighted.](media/adte_modelstoolbar_importimages.png "Upload Model Images")
+    ![The MODELS blade toolbar menu displays with the Upload Model Images button highlighted.](media/adte_modelstoolbar_importimages.png "Upload Model Images")
 
-8. In the open file dialog, navigate to the **icons** folder found in the **models** folder of the lab(`C:\PATH_TO_LAB_FILES\Hands-on lab\Resources\models\icons`). Select all image files in this folder. Note the name of the icons match the model identifiers and version of the models they represent.
+8. In the open file dialog, navigate to the **icons** folder found in the **models** folder of the lab(`Hands-on lab/Resources/models/icons`). Select all image files in this folder. Note the filename of the icons match the model identifiers and version of the models they represent.
 
 9. Once uploaded, the **TWIN GRAPH** will refresh with the icons.
 
     ![A portion of the TWIN GRAPH is displayed with icons representing the models shown.](media/adte_filltwinsgraph_icons.png "TWIN GRAPH")
 
-10. Keep the Azure Digital Twins Explorer web application open for future lab tasks.
+10. Keep the Azure Digital Twins Explorer web application open for later tasks.
 
 ## Exercise 4: Querying and visualizing the Azure Digital Twins graph
 
 Duration: X minutes
 
-X
+The ability to query digital twins can provide insight into the current state of elements and operations in an environment. Azure Digital Twins provides a SQL-like [Azure Digital Twins query language](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-query-language) to query and filter digital twins according to their properties, tag properties, models, relationships, and properties of relationships.
 
 ### Task 1: Run digital twin queries using the CLI
+
+1. Return to your CLI command prompt window.
+
+2. The first query we will perform is to retrieve all digital twins based on the storeroom model we created earlier in the lab. To initiate this query using the CLI, use the following command (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+
+    ```Bash
+    az dt twin query -n ADT_INSTANCE_NAME -q "select * from digitaltwins where IS_OF_MODEL('dtmi:com:contoso:storeroom;1')"
+    ```
+
+3. This query then returns the details of all the storeroom digital twins defined by the environment.
+
+    ![A portion of a console window output displays with data in JSON format representing a results array of query results.](media/cli_query_storerooms_result.png "Query output")
+
+4. Keep this CLI command window open for additional tasks later on in this lab.
+
 ### Task 2: Run digital twin queries using Azure Digital Twins Explorer
+
+1. In Azure Digital Twins Explorer, you have already used the **Query Explorer** to retrieve all digital twins instances to refresh the graph. This feature can also perform ad-hoc Digital Twins queries. Let's author a query to retrieve all digital twins that have a **Location** property. Enter the following query in the textbox, then select the **Run Query** button.
+
+    ```SQL
+    select * from digitaltwins where IS_DEFINED(Location)
+    ```
+
+2. The **TWIN GRAPH** will refresh and display only those digital twins instances where the **Location** property is defined. Select any node from the graph to view the properties.
+  
+    ![The Azure Digital Twins Explorer is shown with the above query in the textbox and the resulting graph displayed. A segment of the graph is highlighted with its details appearing in a blade to the right.](media/adte_query_locationresultsanddetail.png "Azure Digital Twins Explorer Query")
+
+3. Keep the Azure Digital Twins Explorer web application open for later tasks.
 
 ## Exercise 5: Keeping Azure Digital Twin instances up-to-date
 
 Duration: X minutes
 
-ASDF
+It is critical that digital twins remain up-to-date with their real-world counterparts. In this exercise, we'll review some different approaches to updating digital twins.
 
 ### Task 1: Manually update the state of a digital twin using the CLI
 
-1. S
+1. In the CLI command window, execute the following command to update the **StockLevel** in storeroom **SR9036** to **42** (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name). Because this is our first time setting this value, we need to use the **add** operation.
+
+    ```Bash
+    az dt twin update -n ADT_INSTANCE_NAME --twin-id "SR90636" --json-patch '{"op":"add","path":"/StockLevel","value":42}'
+    ```
+
+2. Use the CLI to view the updated value by executing the following command:
+
+    ```Bash
+    az dt twin query -n ADT_INSTANCE_NAME -q "select * from digitaltwins where $dtId='SR90636'"
+    ```
+
+3. Keep this CLI command window open for additional tasks in this lab.
 
 ### Task 2: Manually update the state of a digital twin using the Azure Digital Twins Explorer
 
-1. X
+1. In the Azure Digital Twins Explorer, enter the following query in the **QUERY EXPLORER**, and select **Run Query**. This query returns the same storeroom that we updated in the previous task.
 
-### Task 3: Using a logic application to trigger Azure Digital Twin updates
+    ```SQL
+    select * from digitaltwins where $dtId='SR90636'
+    ```
 
-## Exercise 6: Simulating real-world telemetry
+2. In the **TWIN GRAPH**, select the **SR90636** node. In the **PROPERTIES** pane, observe the **StockLevel** value is set to **42**.
+
+    ![The PROPERTIES pane shows the storeroom properties with the StockLevel property highlighted with the value of 42.](media/adte_stocklevel_42.png "Storeroom properties")
+
+3. Edit the **StockLevel** property by selecting the value. Type in the value **24** and select **Save**.
+
+    ![The PROPERTIES pane shows the storeroom properties with the StockLevel property in edit mode with the value of 24 provided in the textbox. The Save icon is highlighted.](media/adte_stocklevel_24.png)
+
+4. Once the operation completes, you are presented with the JSON patch information. Because the StockLevel property has already been set for this storeroom, it issued the **replace** operation.
+
+    ![A dialog is shown with the JSON patch information indicating the StockLevel value has been replaced with 24.](media/adte_patch_information.png)
+
+### Task 3: Using a logic application to trigger Azure Digital Twin updates for shipments
+
+Azure Logic Apps is a cloud service that helps you automate workflows across apps and services. By connecting Logic Apps to the Azure Digital Twins APIs, you can create automated flows to interact with your digital twins.
+
+We will be using a Logic App to simulate shipment ETA information being updated from an ERP system. However, our Logic App runs on a timer that will randomly update the ETA for demonstration purposes.
+
+1. We will first need to create an app registration and configure it with the right permissions to allow communication with the DigitalTwins resource.
+
+   1. In the [Azure Portal](https://portal.azure.com), expand the left hamburger menu and select **Azure Active Directory**.
+
+   2. Select **App registrations**.
+
+   3. Select **+ New registration**.
+
+   4. In the **Register an application** form, enter **mcw-adt** in the **Name** field. Select **Register**.
+
+      ![A portion of the Register an application form is displayed with the mcw-adt in the Name field.](media/aad_registerapp_form.png "AAD application registration")
+
+   5. In the **mcw-adt** application screen, select **Certificates and secrets** from the left menu.
+
+   6. Select **+ New client secret** beneath the **Client secrets** heading.
+
+   7. In the **Add a client secret** blade, enter **MCW ADT Secret** for the description, and retain the default value in the **Expires** field. Select **Add**.
+
+      ![The Add a client secret form is shown populated with the values described in this step.](media/aad_appsecret_addform.png "Add a client secret form")
+
+   8. The client secret is now displayed in the **Client secrets** section of the page. Record the **Value** of the secret for later use in this lab.
+
+      ![The MCW ADT secret is shown beneath the Client secrets heading. The Copy icon next to the Value is highlighted.](media/aad_application_clientsecret_copyvalue.png "Application Client secrets")
+
+   9. From the left menu, select **Overview**. Then record the **Application (client) ID** and **Directory (tenant) ID** values for later use in this lab.
+
+      ![A portion of the Azure Active Directory Overview screen is shown with the Application and Directory ID values highlighted.](media/aad_application_overview.png "Azure Active Directory application Overview screen")
+
+2. Azure Digital Twins does not currently have a certified (pre-built) connector for Logic Apps. Instead, the current process for using Logic Apps with Azure Digital Twins is to create a custom Logic Apps connector. The connector resource was already created in the **Before the HOL** deployment, but we will need to do the configuration and authentication manually.
+
+   1. In [Azure portal](https://portal.azure.com), open the lab resource group and select the **Logic apps custom connector** resource.
+        ![A portion of the lab resources listing is shown with the Logic apps custom connector resource highlighted.](media/rg_listing_logicappconnector.png "Resource group listing")
+
+   2. On the **Overview** screen, select the **Edit** button from the toolbar.
+
+   3. In the **General** step, in the **Custom connectors** section, fill out the form as follows:
+
+      | Field | Value|
+      |-------|------|
+      | API endpoint | REST |
+      | Import mode | OpenAPI file |
+      | Import mode file | Select **Import**, then choose **digitaltwins.json** located in the folder (`Hands-on lab/Resources/deployment`). |
+
+   4. In the **General** step, in the **General information** section, set the **Host** field to the **Host name** value of your **Azure Digital Twins** service. Leave all other values as their defaults. In the top toolbar, select **Update connector**.
+
+      ![A portion of the Edit Logic Apps Custom Connector toolbar displays with the Update connector button highlighted.](media/logicappconnector_updateconnectorbutton.png "Update connector")
+
+   5. In the top toolbar, select the **2.Security** step.
+   6. In the **Authentication type**, select the **Edit** button. Choose **OAuth 2.0** for the authentication type.
+   7. In the **OAuth 2.0** form, enter the following values (keep all other fields with their default values):
+
+        | Field | Value |
+        |-------|-------|
+        | Identity provider | Azure Active Directory |
+        | Client id | Enter the Application (client) ID for your Azure AD app registration. |
+        | Client secret | Enter the value of the client secret you created. |
+        | Tenant ID | Enter the Directory (tenant) ID for your Azure AD app registration. |
+        | Resource URL | 0b07f429-9f4b-4714-9392-cc5e8e80c8b0 |
+        | Scope | Directory.AccessAsUser.All |
+
+   8. In the top toolbar, select **Update connector**. Updating the connector populates the Redirect URL field. Record this value for use later on in this lab.
+
+   9. Close the **Edit Logic Apps Custom Connector** pane by clicking the **X** in the top corner.
+
+3. Next, we'll use the custom connector's Redirect URL value you copied in the last step to grant the connector permissions in your app registration.
+
+   1. In the [Azure portal](https://portal.azure.com), expand the left menu and select **Azure Active Directory**.
+
+   2. From the left menu, select **App registrations**.
+
+   3. Select the registration you created earlier (**mcw-adt**).
+
+   4. Select **Authentication** from the left menu.
+
+   5. Select **+ Add a platform** from beneath the **Platform configurations** section.
+
+   6. In the **Configure platforms** blade, select **Web**.
+
+   7. In the **Configure Web** blade, enter the **Redirect URL** value that you recorded earlier, and ensure the **Access tokens** and **ID tokens** checkboxes are checked. Select **Configure**.
+
+       ![The Configure Web blade is shown with the Redirect URI field highlighted and the Access tokens and ID tokens checkboxes checked.](media/aad_application_webplatformauth.png "Configure Web form")
+
+4. We are now able to authorize the connector.
+
+   1. In the Azure Portal, navigate to the lab resource group and select the API Connection resource named **{PREFIX}ApiConnection**.
+
+   2. From the left menu, select **Edit API connection**.
+
+   3. On the **Edit API connection** screen, select **Authorize**.
+
+   4. Select **Save**.
+
+5. Let's review the Logic application. In the [Azure Portal](https://portal.azure.com), open the lab resource group. Select the **Logic app** resource named **{PREFIX}ShipmentArrivalTimeUpdateApp**.
+
+6. On the **Overview** screen of the Logic app, ensure the app is **Enabled**. If you see **Enable** in the toolbar menu, select it.
+
+7. From the left menu, select **Logic app designer**.
+
+8. Expand each activity of the flow. The **Recurrence** activity shows the Logic app is triggered every hour. The **Query Query Twins** activity uses the **{PREFIX}LogicAppConnector** that we built to execute a twin query retrieving all shipment twins. The **For each** activity then adds a random number of minutes to the **EstimatedTimeOfArrival** value of the shipment. This update also occurs via the **{PREFIX}LogicAppConnector** service.
+
+   ![The Logic app designer has all the activities expanded described by the text above.](media/logicapp_activities_expanded.png "Logic app designer")
+
+> **Note**: If desired, you can choose to execute the Logic app on-demand by selecting **Run Trigger** from the **Overview** screen of the service.
+
+### Task 4: Simulating a real device and updating digital twins via telemetry ingestion
+
+The best way to update device twin information is to base it on live data being ingested directly from the environment in real time. In this task, we will setup an event grid subscription to feed an Azure Function that will then process the incoming messages and update digital twins accordingly.
+
+1. In the [Azure portal](https://portal.azure.com), open the lab resource group and select the **IoT Hub** resource (**{PREFIX}iothub**).
+
+2. From the left menu, select **Events**.
+
+3. Select **+ Event Subscription** from the top toolbar.
+
+4. In the **Create Event Subscription** form, enter the following information, then select the **Create** button:
+
+    | Field | Value |
+    |--------|--------|
+    | Name | IoTHubToTwinsEvent |
+    | Event Schema | Event Grid Schema |
+    | System Topic Name | IoTHubToTwinsTopic |
+    | Filter to Event Types | Ensure only **Device Telemetry** is selected. |
+    | Endpoint Type | Azure Function |
+    | Endpoint | Select the **Select an endpoint** link. Ensure the Function App **{PREFIX}DTFunctions** is selected, and choose the **IoTHubToTwins** function, then **Confirm Selection**. |
+
+    ![The Select Azure Function form is displayed with the fields populated as described in the preceding table.](media/iothub_createeventsub_functionselection.png "Select Azure Function form")
+
+5. We now need to ensure the Azure Function has permission to update digital twins instances. Open the CLI command window, and enter the following command to create a managed service identity for the Azure Functions app (replace RESOURCE_GROUP_NAME and FUNCTION_APP_NAME with your values):
+
+    ```Bash
+    az functionapp identity assign -g {RESOURCE_GROUP_NAME}  -n {FUNCTION_APP_NAME}
+    ```
+
+6. Record the **principalId** value from the output of the previous step.
+
+   ![Console output displays with the principalId value highlighted.](media/azurefunctions_msi_consoleoutput.png "Console output of MSI creation")
+
+7. Now we'll assign the Azure Functions managed service identity (MSI) permissions to the Azure Digital Twins service by assigning it the **Digital Twins Data Owner** role. In the CLI command window, and issue the following command (replacing DIGITAL_TWINS_INSTANCE_NAME and PRINCIPAL_ID with your values):
+
+    ```Bash
+    az dt role-assignment create --dt-name DIGITAL_TWINS_INSTANCE_NAME --assignee "PRINCIPAL_ID" --role "Azure Digital Twins Data Owner"
+    ```
+
+8. We will now configure our Azure Digital Twins Explorer application that is running locally to register for real-time updates using SignalR. We will need to create a route from the Azure Digital Twins service to a broker Azure Function to update SignalR with the incoming data.
+
+   1. In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace DIGITAL_TWINS_INSTANCE_NAME with your value):
+
+        ```Bash
+        az dt route create --dt-name DIGITAL_TWINS_INSTANCE_NAME --endpoint-name DTEndpoint --route-name DTRoute
+        ```
+
+   2. In the Azure portal, open the lab resource group and select the **{PREFIX}eventgrid** Event Grid Topic resource.
+
+   3. Select **+ Event Subscription** from the top toolbar menu.
+
+   4. In the **Create Event Subscription** form, fill it out as follows, then select **Create**:
+
+        | Field | Value |
+        |-------|-------|
+        | Name | DTToSignalR |
+        | Event Schema | Event Grid Schema |
+        | Endpoint Type | Azure Function |
+        | Endpoint | Select the **Select an endpoint** link, then choose the **{PREFIX}DTFunctions** Function app. For the Function, select the **broadcast** function. Select **Confirm Selection**. |
+
+    >**Note** Because we are running the Azure Digital Twins Explorer locally, we are not able to leverage the SignalR hub. Alternatively, you could follow guidance on deploying the Azure Digital Twins Explorer as a cloud service and configure it to receive updates from SignalR. You can find this guidance on the [Azure Digital Twins Explorer repository](https://github.com/Azure-Samples/digital-twins-explorer#advanced).
+
+9. To enable device simulation, we will need to retrieve the IoT Hub connection string.
+
+   1. In the [Azure Portal](https://portal.azure.com), open the lab resource group and select the **IoT Hub** resource ({PREFIX}iothub).
+
+   2. From the left menu, select **Shared access policies**.
+
+   3. Select the **iothubowner** policy from the left menu.
+
+   4. In the **iothubowner** blade, select the **Copy** button next to the **Connection string - primary key** text box. Record this value for a future task.
+
+        ![The iothubowner blade displays with the Copy button highlighted next to the primary connection string value.](media/iothubowner_primaryconnectionstring.png "iothubowner policy blade")
+
+10. In Visual Studio Code, open the **devicesimulation** folder (`Hands-on lab/Resources/devicesimulation`).
+
+11. Open the **appSettings.json** file, and paste the IoT Hub connection string that you have previously recorded. Save the file.
+
+12. Select **View** from the top menu, and select **Terminal** to open a terminal window.
+
+13. Execute the following command in the terminal window:
+
+    ```Bash
+    dotnet run
+    ```
+
+14. This will start the devices simulator program. When prompted, enter the command: **start** and press the **Enter** key. This simulation will register and initialize many IoT devices, then will begin sending updates. By default this simulation is set to run for 10 minutes.
+
+15. Identify a device in the output that you would like to track, and use the Azure Digital Twins Explorer application to query for and view the properties.
+
+> **Note**: Telemetry will appear in the PROPERTY panel of the Digital Twins Explorer tool.
+
+## Exercise 6: Visualizing incoming data with Azure Time Series Insights
 
 Duration: X minutes
 
-ASDF
+The capability of querying digital twins either via CLI or via the Azure Digital Twins Explorer application is very useful to discover the point-in-time state of the environment. Further reporting is possible through feeding incoming digital twins updates to Time Series Insights.
 
-### Task 1: Task name
+### Task 1: Configure security of Time Series Insights
 
-1. Asdf.
+1. In the [Azure Portal](https://portal.azure.com), select the lab resource group.
 
-## Exercise 7: Visualizing incoming data with Azure Time Series Insights
+2. In the list of resources, select the **{PREFIX}tsi** Time Series Insights environment resource.
 
-Duration: X minutes
+3. From the left menu, select **Access control (IAM)**.
 
-ASDF
+4. Select **+ Add**, then **Add role assignment** from the top toolbar menu.
 
-### Task 1: Task name
+5. In the **Add role assignment** blade, select the **Reader** role, then search for and select your Azure user account, identified by your Azure login email address. Select **Save**.
 
-1. Asdf.
+6. Repeat steps 4 and 5, this time granting yourself the **Contributor** role.
+
+### Task 2: Create a route from Azure Digital Twins for Time Series Insights
+
+1. In the CLI Command window, create a new route on your Azure Digital Twins instance so that all digital twins updates will be routed through an endpoint. Execute the following command to establish this route (replace DIGITAL_TWINS_INSTANCE_NAME with your own value):
+
+    ```Bash
+    az dt route create -n DIGITAL_TWINS_INSTANCE_NAME --endpoint-name EventHubEndpoint --route-name EventHubRoute --filter "type = 'Microsoft.DigitalTwins.Twin.Update'"
+    ```
+
+2. Establishing this route will provide data into an event hub located in the **{PREFIX}eventhubnamespaces** resource of the lab resource group. This event hub (**tsieventhub**) exposes a **tsi-preview** consumer group which are used as the Event Source of the Time Series Insights environment.
+
+### Task 3: View incoming telemetry using Time Series Insights
+
+1. Ensure the device simulator is still running, if it has been more than 10 minutes, it may have completed. Simply restart the device simulator using the same steps as before.
+
+2. In the [Azure Portal](https://portal.azure.com), select the lab resource group.
+
+3. In the list of resources, select the **{PREFIX}tsi** Time Series Insights environment resource.
+
+4. Select **Event Sources** from the left menu, and observe the **HubInput** details that are pointing to the **tsieventhub** using the **tsi-preview** consumer group.
+
+5. Select **Overview**, then select **Go to TSI Explorer** button from the top toolbar.
 
 ## After the hands-on lab
 
 Duration: X minutes
 
-\[insert your custom Hands-on lab content here . . .\]
-
 ### Task 1: Delete resource group
 
-1. In the Azure Portal, delete the resource group you created for this lab.
+1. In the [Azure Portal](https://portal.azure.com), delete the resource group you created for this lab.
+
+### Task 2: Delete the Active Directory app registration
+
+1. In the [Azure Portal](https://portal.azure.com), expand the left menu and select **Azure Active Directory**.
+
+2. From the left menu, select **App registrations**.
+
+3. Select the **mcw-adt** registration, then select **Delete** from the top toolbar menu.
 
 You should follow all steps provided *after* attending the Hands-on lab.
