@@ -65,11 +65,11 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 ## Abstract and learning objectives
 
-\[Insert what is trying to be solved for by using this workshop. . . \]
+In this hands-on lab, you will deploy an end-to-end supply chain IoT solution. You will learn how to model the physical world using Device Twin Definition Language (DTDL) and use the CLI and the Azure Digital Twins Explorer tool to create, update, and query the current state of an environment. You will also learn various ways of keeping Digital Twin instances up-to-date with the real world. You will learn about event routing and how to leverage the Azure Digital Twins service update events as event sources for Azure Time Series Insights and SignalR.
 
 ## Overview
 
-\[insert your custom workshop content here . . . \]
+The Leveraging Azure Digital Twins in a supply chain hands-on lab is an exercise that will challenge you to implement an end-to-end scenario using the supplied example based on Azure IoT infrastructure and related Azure services. The primary focus of this lab is to learn how to author and use Azure Digital Twins in an IoT solution. The hands-on lab can be implemented on your own, but it is highly recommended to pair up with other members at the lab to model a real-world experience and to allow each member to share their expertise for the overall solution.
 
 ## Solution architecture
 
@@ -79,7 +79,13 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 ## Requirements
 
-1. Azure Subscription
+1. Azure Subscription with the following permissions or capabilities:
+
+   1. Create and manage Azure resources
+
+   2. Manage user access to Azure resources (including granting and delegating permissions)
+
+    > **NOTE**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
 
 2. [Azure CLI 2.3.1+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
