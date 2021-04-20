@@ -28,7 +28,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 - [Leveraging Azure Digital Twins in a supply chain before the hands-on lab setup guide](#leveraging-azure-digital-twins-in-a-supply-chain-before-the-hands-on-lab-setup-guide)
   - [Requirements](#requirements)
   - [Before the hands-on lab](#before-the-hands-on-lab)
-    - [Task 1: Create resource group](#task-1-create-resource-group)
+    - [Task 1: Create the lab resource group](#task-1-create-the-lab-resource-group)
     - [Task 2: Deploy the necessary Azure resources](#task-2-deploy-the-necessary-azure-resources)
 <!-- /TOC -->
 
@@ -36,20 +36,57 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 ## Requirements
 
-1. Number and insert your custom workshop content here . . . 
+1. Azure Subscription with the following permissions or capabilities:
+
+   1. Create and manage Azure resources
+
+   2. Manage user access to Azure resources (including granting and delegating permissions)
+
+    > **NOTE**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
+
+2. [Azure CLI 2.3.1+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+3. PowerShell ([macOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6&preserve-view=true)) (Windows: PowerShell is built in)
+
+4. [Visual Studio Code](https://code.visualstudio.com/)
+
+5. [.NET Core 3.1](https://dotnet.microsoft.com/download)
+
+6. [C# Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+
+7. [Node.js 10+](https://nodejs.org/)
 
 ## Before the hands-on lab
 
 Duration: X minutes
 
-\[insert your custom workshop content here . . . 
+### Task 1: Create the lab resource group
 
-### Task 1: Create resource group
+1. In the [Azure Portal](https://portal.azure.com), expand the left menu and select **Resource groups**.
 
-1. Number and insert your custom workshop content here . . . 
+    ![The left menu of the Azure Portal displays with the Resource groups item selected.](media/azureleftmenu_resourcegroups.png "Azure Portal left menu")
+
+2. Select **+ Add** from the top toolbar menu, and create a resource group for this lab. Name the resource group: **mcw-adt-supply-chain**.
 
 ### Task 2: Deploy the necessary Azure resources
 
-1. Number and insert your custom workshop content here . . . 
+1. Deploy the ARM template (CTRL/Command + left click the image below to open in a new tab):
+
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsolliancenet%2microsoft-leveraging-azure-digital-twins-supply-chain%2Fmain%2FHands-on%20lab%2FResources%2Fdeployment%2FARM%2Fdigtwins-template-agad.json" target="_blank">
+          <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
+      </a>
+
+2. Configure the following fields:
+
+    | Field | Value |
+    |--------|--------|
+    | Subscription | Select the desired subscription. |
+    | Resource group | Select the lab resource group you created in the previous step. |
+    | Location | Select the Region where to deploy the resources. Keep in mind that all resources will be deployed to this region. |
+    | Prefix | The template will generate a unique ID once you start your deployment. Alternatively, you can enter your own prefix. |
+
+3. Select **Review + create**.
+
+4. Select **Create**.
 
 You should follow all steps provided *before* performing the Hands-on lab.
