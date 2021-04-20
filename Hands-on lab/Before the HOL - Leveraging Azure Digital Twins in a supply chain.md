@@ -30,6 +30,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Task 1: Create the lab resource group](#task-1-create-the-lab-resource-group)
     - [Task 2: Deploy the necessary Azure resources](#task-2-deploy-the-necessary-azure-resources)
+  - [Task 3: Download the lab files](#task-3-download-the-lab-files)
 <!-- /TOC -->
 
 # Leveraging Azure Digital Twins in a supply chain before the hands-on lab setup guide
@@ -88,5 +89,17 @@ Duration: X minutes
 3. Select **Review + create**.
 
 4. Select **Create**.
+
+## Task 3: Download the lab files
+
+Download the lab artifacts from GitHub.
+
+1. In a web browser, navigate to the [Leveraging Azure Digital Twins in a supply chain GitHub repo](https://github.com/solliancenet/microsoft-leveraging-azure-digital-twins-supply-chain).
+
+2. On the repo page, expand the **Code**, then select **Download ZIP**.
+
+   ![Download .zip containing the repository](media/github-download-repo.png 'Download ZIP')
+
+3. Unzip the contents to your root hard drive (i.e. `C:\`).
 
 You should follow all steps provided *before* performing the Hands-on lab.
