@@ -397,11 +397,15 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Preferred target audience
 
-\[insert your custom workshop content here . . . \]
+Courtney Laval, Chief Technical Officer (CTO), Contoso Apparel.
+
+The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Courtney Laval, CTO of Comntoso Apparel. Usually we talk to the infrastructure managers who report to the chief information officers (CIOs), or to application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
 
 ## Preferred solution
 
-\[insert your custom workshop content here . . . \]
+![The solution architecture diagram is shown as explained in the following paragraph.](media/preferred_solution.png "Solution Architecture")
+
+IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service.  A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function.
 
 *High-level architecture*
 
@@ -459,7 +463,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 3. How would Contoso Apparel monitor for humidity anomalies in near real-time?
 
-    Contoso Apparel could use Azure Stream Analytics to monitor for anomalies in near real-time, either using a query to find telemetry out of range, or utilizing the built-in anomaly detection capabilities. Alternatively, Contoso could also subscribe to the Digital Twin Telemetry Messages notification type and filter for telemetry out of range and route those to Event Grid for further processing. Event routes are also used to handle events within the twin graph and send data from digital twin to digital twin. This is done by connecting event routes through Event Grid to compute resources, such as Azure Functions. These functions then define how twins should receive and respond to events.
+    Contoso can subscribe to the Digital Twin Telemetry Messages notification type and route those to Event Grid for further processing. Event routes are also used to handle events within the twin graph and send data from digital twin to digital twin. This is done by connecting event routes through Event Grid to compute resources, such as Azure Functions. These functions then define how twins should receive and respond to events. Alternatively, Contoso Apparel could use Azure Stream Analytics to monitor for anomalies in near real-time, either using a query to find telemetry out of range, or utilizing the built-in anomaly detection capabilities.
 
     ![Telemetry events are emitted from Azure Digital Twins and are dispatched to a series of event routes defined by a filter and an endpoint. Azure Functions and Azure Time Series insights are depicted as the downstream targets listening for these events. The Azure Function is shown to be modifying the twin graph.](media/event_routing.png "Azure Digital Twins Event Routes")
 
@@ -497,4 +501,6 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Customer quote (to be read back to the attendees at the end)
 
-\[insert your custom workshop content here . . . \]
+"When we started looking into modeling our existing IoT environment, it felt like we were to embark on an extremely complicated, proprietary, and lengthy process. We are pleasantly surprised with how we were quickly able to grasp DTDL and the many different approaches we can take to ensure our digital twins up to date. We now have an architecture in place that allows us to not only query the current state of our environment, but we also have the ability to push updates to other visualization tools like Azure Time Series Insights, and our web applications by leveraging SignalR!"
+
+Courtney Laval, Chief Technical Officer (CTO), Contoso Apparel.
