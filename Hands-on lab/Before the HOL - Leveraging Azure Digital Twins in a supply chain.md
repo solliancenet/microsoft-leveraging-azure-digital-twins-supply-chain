@@ -72,7 +72,7 @@ Duration: X minutes
 
 1. Deploy the ARM template (CTRL/Command + left click the image below to open in a new tab):
 
-    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsolliancenet%2microsoft-leveraging-azure-digital-twins-supply-chain%2Fmain%2FHands-on%20lab%2FResources%2Fdeployment%2FARM%2Fdigtwins-template-agad.json" target="_blank">
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsolliancenet%2Fmicrosoft-leveraging-azure-digital-twins-supply-chain%2Fmain%2FHands-on%2520lab%2FResources%2Fdeployment%2FARM%2Fdigtwins-template-agad.json" target="_blank">
           <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
       </a>
 
