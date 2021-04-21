@@ -36,11 +36,6 @@
         "@type": "Relationship",
         "name": "containsCutter",
         "target": "dtmi:com:contoso:cutter;1"
-      },
-      {
-        "@type": "Relationship",
-        "name": "containsStoreRoom",
-        "target": "dtmi:com:contoso:storeroom;1"
       }
     ]
   }

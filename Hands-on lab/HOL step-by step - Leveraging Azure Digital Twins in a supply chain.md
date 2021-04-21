@@ -127,51 +127,50 @@ It is essential to distinguish between properties and telemetry. With properties
 Here is an example of a Planet model. Model files should be saved with the **.json** extension. This example demonstrates the proper syntax in defining the Planet interface, properties, telemetry, relationship, and component. Take note that when defining a component interface (Crater in this example), it should be defined in the same array as the interface that uses it (Planet).
 
 ```JavaScript
-[
+{
+    "@id": "dtmi:com:contoso:Planet;1",
+    "@type": "Interface",
+    "@context": "dtmi:dtdl:context;2",
+    "displayName": "Planet",
+    "contents": [
     {
-      "@id": "dtmi:com:contoso:Planet;1",
-      "@type": "Interface",
-      "@context": "dtmi:dtdl:context;2",
-      "displayName": "Planet",
-      "contents": [
-        {
-          "@type": "Property",
-          "name": "name",
-          "schema": "string"
-        },
-        {
-          "@type": "Property",
-          "name": "mass",
-          "schema": "double"
-        },
-        {
-          "@type": "Telemetry",
-          "name": "Temperature",
-          "schema": "double"
-        },
-        {
-          "@type": "Relationship",
-          "name": "satellites",
-          "target": "dtmi:com:contoso:Moon;1"
-        },
-        {
-          "@type": "Component",
-          "name": "deepestCrater",
-          "schema": "dtmi:com:contoso:Crater;1"
-        }
-      ]
+        "@type": "Property",
+        "name": "name",
+        "schema": "string"
     },
     {
-      "@id": "dtmi:com:contoso:Crater;1",
-      "@type": "Interface",
-      "@context": "dtmi:dtdl:context;2"
+        "@type": "Property",
+        "name": "mass",
+        "schema": "double"
     },
     {
-      "@id": "dtmi:com:contoso:Moon;1",
-      "@type": "Interface",
-      "@context": "dtmi:dtdl:context;2"
+        "@type": "Telemetry",
+        "name": "Temperature",
+        "schema": "double"
+    },
+    {
+        "@type": "Relationship",
+        "name": "satellites",
+        "target": "dtmi:com:contoso:Moon;1"
+    },
+    {
+        "@type": "Component",
+        "name": "deepestCrater",
+        "schema": "dtmi:com:contoso:Crater;1"
     }
-  ]
+    ]
+},
+{
+    "@id": "dtmi:com:contoso:Crater;1",
+    "@type": "Interface",
+    "@context": "dtmi:dtdl:context;2"
+},
+{
+    "@id": "dtmi:com:contoso:Moon;1",
+    "@type": "Interface",
+    "@context": "dtmi:dtdl:context;2"
+}
+  
 ```
 
 > **TIP**: DTDL also supports model inheritance using the **extends** field.
@@ -181,14 +180,12 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
 1. Let's begin by defining the interface for a storeroom. Open Visual Studio Code to the `Hands-on lab/Resources/models` folder, and create a new file named **storeroom.json**. Add the following text to this file:
 
     ```JavaScript
-    [
-        {
-            "@id": "dtmi:com:contoso:storeroom;1",
-            "@context": "dtmi:dtdl:context;2",
-            "@type": "Interface",
-            "displayName": "StoreRoom"
-        }
-    ]
+    {
+        "@id": "dtmi:com:contoso:storeroom;1",
+        "@context": "dtmi:dtdl:context;2",
+        "@type": "Interface",
+        "displayName": "StoreRoom"
+    }
     ```
 
     | Field | Description |
@@ -232,33 +229,31 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
 4. Review the final `storeroom.json` file and ensure it matches the following:
 
     ```JavaScript
-    [
-        {
-            "@id": "dtmi:com:contoso:storeroom;1",
-            "@context": "dtmi:dtdl:context;2",
-            "@type": "Interface",
-            "displayName": "StoreRoom",
-            "contents": [
-                {
-                    "@type": "Property",
-                    "name": "StockLevel",
-                    "schema": "integer",
-                    "writable": true
-                },
-                {
-                    "@type": "Telemetry",
-                    "name": "Humidity",
-                    "schema": "integer"
-                },
-                {
-                    "@type": ["Telemetry", "Temperature"],
-                    "name": "Temperature",
-                    "schema": "integer",
-                    "unit": "degreeCelsius"
-                }
-            ]
-        }
-    ]
+    {
+        "@id": "dtmi:com:contoso:storeroom;1",
+        "@context": "dtmi:dtdl:context;2",
+        "@type": "Interface",
+        "displayName": "StoreRoom",
+        "contents": [
+            {
+                "@type": "Property",
+                "name": "StockLevel",
+                "schema": "integer",
+                "writable": true
+            },
+            {
+                "@type": "Telemetry",
+                "name": "Humidity",
+                "schema": "integer"
+            },
+            {
+                "@type": ["Telemetry", "Temperature"],
+                "name": "Temperature",
+                "schema": "integer",
+                "unit": "degreeCelsius"
+            }
+        ]
+    }
     ```
 
 5. Now we need to add StoreRoom as a relationship in the Factory model. Open the `Hands-on lab/Resources/models/factory.json` file, and add the following to the **contents** array:
@@ -307,7 +302,7 @@ It is recommended that you validate your DTDL models offline prior to loading th
 
 7. In the terminal, navigate to the application directory by executing the following command:
 
-   ```PowerShell
+   ```Bash
    cd .\DTDLValidator-Sample\DTDLValidator\
    ```
 
@@ -315,7 +310,7 @@ It is recommended that you validate your DTDL models offline prior to loading th
 
 9. In the Visual Studio Code terminal window, execute the following command (replacing **MODEL_FOLDER_PATH** with the full path to your models folder copied in the previous step, keeping the quote characters intact):
 
-    ```PowerShell
+    ```Bash
     dotnet run -d "MODEL_FOLDER_PATH"
     ```
 
@@ -381,20 +376,20 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
     cd "MODEL_FOLDER_PATH"
     ```
 
-8. Upload the storeroom model using the CLI with the following command (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+8. Upload the storeroom model using the CLI with the following command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
 
     ```Bash
-    az dt model create -n ADT_INSTANCE_NAME --models storeroom.json
+    az dt model create -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME --models storeroom.json
     ```
 
     After a few seconds, you should see output similar to the following:
 
     ![Output from a console window is displayed showing a JSON definition of the storeroom model that was added to the Azure Digital Twins instance](media/cli_addmodel_output.png "CLI console output")
 
-9. Verify that your model was uploaded successfully by executing the following command that lists registered models with your Azure Digital Twins instance (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+9. Verify that your model was uploaded successfully by executing the following command that lists registered models with your Azure Digital Twins instance (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
   
     ```Bash
-    az dt model list -n ADT_INSTANCE_NAME
+    az dt model list -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME
     ```
 
 10. Keep this CLI command window open for additional tasks later on in this lab.
@@ -443,22 +438,22 @@ Now that we've modeled the entities in our environment, we are ready to create d
 
 1. Return to your CLI command prompt window.
 
-2. The first storeroom that we will define has the identifier of **SR90636**. To create this digital twin instance, execute the following CLI command  (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+2. The first storeroom that we will define has the identifier of **SR90636**. To create this digital twin instance, execute the following CLI command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
   
     ```Bash
-    az dt twin create -n ADT_INSTANCE_NAME --dtmi "dtmi:com:contoso:storeroom;1" --twin-id "SR90636"
+    az dt twin create -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME --dtmi "dtmi:com:contoso:storeroom;1" --twin-id "SR90636"
     ```
 
-3. The second storeroom that we will define has the identifier of **SR90637**. To create this digital twin instance, execute the following CLI command (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+3. The second storeroom that we will define has the identifier of **SR90637**. To create this digital twin instance, execute the following CLI command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
   
     ```Bash
-    az dt twin create -n ADT_INSTANCE_NAME --dtmi "dtmi:com:contoso:storeroom;1" --twin-id "SR90637"
+    az dt twin create -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME --dtmi "dtmi:com:contoso:storeroom;1" --twin-id "SR90637"
     ```
 
-4. Query for all defined digital twins by executing the following command (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+4. Query for all defined digital twins by executing the following command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
 
     ```Bash
-    az dt twin query -n ADT_INSTANCE_NAME -q "select * from digitaltwins"
+    az dt twin query -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME -q "select * from digitaltwins"
     ```
 
     ![A portion of a command window output is displayed showing a results array with two storeroom digital twins instances returned.](media/cli_queryresults_alltwins.png "Digital Twins query output")
@@ -537,10 +532,10 @@ The ability to query digital twins can provide insight into the current state of
 
 1. Return to your CLI command prompt window.
 
-2. The first query we will perform is to retrieve all digital twins based on the storeroom model we created earlier in the lab. To initiate this query using the CLI, use the following command (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
+2. The first query we will perform is to retrieve all digital twins based on the storeroom model we created earlier in the lab. To initiate this query using the CLI, use the following command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
 
     ```Bash
-    az dt twin query -n ADT_INSTANCE_NAME -q "select * from digitaltwins where IS_OF_MODEL('dtmi:com:contoso:storeroom;1')"
+    az dt twin query -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME -q "select * from digitaltwins where IS_OF_MODEL('dtmi:com:contoso:storeroom;1')"
     ```
 
 3. This query then returns the details of all the storeroom digital twins defined by the environment.
@@ -571,16 +566,16 @@ It is critical that digital twins remain up-to-date with their real-world counte
 
 ### Task 1: Manually update the state of a digital twin using the CLI
 
-1. In the CLI command window, execute the following command to update the **StockLevel** in storeroom **SR9036** to **42** (replace ADT_INSTANCE_NAME with your Azure Digital Twins instance name). Because this is our first time setting this value, we need to use the **add** operation.
+1. In the CLI command window, execute the following command to update the **StockLevel** in storeroom **SR9036** to **42** (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name). Because this is our first time setting this value, we need to use the **add** operation.
 
     ```Bash
-    az dt twin update -n ADT_INSTANCE_NAME --twin-id "SR90636" --json-patch '{"op":"add","path":"/StockLevel","value":42}'
+    az dt twin update -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME --twin-id "SR90636" --json-patch '{"op":"add","path":"/StockLevel","value":42}'
     ```
 
-2. Use the CLI to view the updated value by executing the following command:
+2. Use the CLI to view the updated value by executing the following command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
 
     ```Bash
-    az dt twin query -n ADT_INSTANCE_NAME -q "select * from digitaltwins where $dtId='SR90636'"
+    az dt twin query -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME -q "select * from digitaltwins where $dtId='SR90636'"
     ```
 
 3. Keep this CLI command window open for additional tasks in this lab.
@@ -741,25 +736,25 @@ The best way to update device twin information is to base it on live data being 
 5. We now need to ensure the Azure Function has permission to update digital twins instances. Open the CLI command window, and enter the following command to create a managed service identity for the Azure Functions app (replace RESOURCE_GROUP_NAME and FUNCTION_APP_NAME with your values):
 
     ```Bash
-    az functionapp identity assign -g {RESOURCE_GROUP_NAME}  -n {FUNCTION_APP_NAME}
+    az functionapp identity assign -g RESOURCE_GROUP_NAME -n FUNCTION_APP_NAME
     ```
 
 6. Record the **principalId** value from the output of the previous step.
 
    ![Console output displays with the principalId value highlighted.](media/azurefunctions_msi_consoleoutput.png "Console output of MSI creation")
 
-7. Now we'll assign the Azure Functions managed service identity (MSI) permissions to the Azure Digital Twins service by assigning it the **Digital Twins Data Owner** role. In the CLI command window, and issue the following command (replacing DIGITAL_TWINS_INSTANCE_NAME and PRINCIPAL_ID with your values):
+7. Now we'll assign the Azure Functions managed service identity (MSI) permissions to the Azure Digital Twins service by assigning it the **Digital Twins Data Owner** role. In the CLI command window, and issue the following command (replacing RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME and PRINCIPAL_ID with your values):
 
     ```Bash
-    az dt role-assignment create --dt-name DIGITAL_TWINS_INSTANCE_NAME --assignee "PRINCIPAL_ID" --role "Azure Digital Twins Data Owner"
+    az dt role-assignment create -g RESOURCE_GROUP_NAME --dt-name DIGITAL_TWINS_INSTANCE_NAME --assignee "PRINCIPAL_ID" --role "Azure Digital Twins Data Owner"
     ```
 
 8. We will now configure our Azure Digital Twins Explorer application that is running locally to register for real-time updates using SignalR. We will need to create a route from the Azure Digital Twins service to a broker Azure Function to update SignalR with the incoming data.
 
-   1. In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace DIGITAL_TWINS_INSTANCE_NAME with your value):
+   1. In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME with your values):
 
         ```Bash
-        az dt route create --dt-name DIGITAL_TWINS_INSTANCE_NAME --endpoint-name DTEndpoint --route-name DTRoute
+        az dt route create -g RESOURCE_GROUP_NAME --dt-name DIGITAL_TWINS_INSTANCE_NAME --endpoint-name DTEndpoint --route-name DTRoute
         ```
 
    2. In the Azure portal, open the lab resource group and select the **{PREFIX}eventgrid** Event Grid Topic resource.
@@ -829,10 +824,10 @@ The capability of querying digital twins either via CLI or via the Azure Digital
 
 ### Task 2: Create a route from Azure Digital Twins for Time Series Insights
 
-1. In the CLI Command window, create a new route on your Azure Digital Twins instance so that all digital twins updates will be routed through an endpoint. Execute the following command to establish this route (replace DIGITAL_TWINS_INSTANCE_NAME with your own value):
+1. In the CLI Command window, create a new route on your Azure Digital Twins instance so that all digital twins updates will be routed through an endpoint. Execute the following command to establish this route (replace RESOURCE_GROUP_NAME and DIGITAL_TWINS_INSTANCE_NAME with your own values):
 
     ```Bash
-    az dt route create -n DIGITAL_TWINS_INSTANCE_NAME --endpoint-name EventHubEndpoint --route-name EventHubRoute --filter "type = 'Microsoft.DigitalTwins.Twin.Update'"
+    az dt route create -g RESOURCE_GROUP_NAME -n DIGITAL_TWINS_INSTANCE_NAME --endpoint-name EventHubEndpoint --route-name EventHubRoute --filter "type = 'Microsoft.DigitalTwins.Twin.Update'"
     ```
 
 2. Establishing this route will provide data into an event hub located in the **{PREFIX}eventhubnamespaces** resource of the lab resource group. This event hub (**tsieventhub**) exposes a **tsi-preview** consumer group which are used as the Event Source of the Time Series Insights environment.
