@@ -6,15 +6,15 @@ Contoso Apparel is a large multinational clothing manufacturer. Their environmen
 
 Contoso Apparel is looking to implement digital twins to model their existing supply chain environment end-to-end. Their goals are:
 
-    -  to visualize the relationship between their processes, products, equipment, factories, shipping logistics, warehouses, and storefronts.
+1. To visualize the relationship between their processes, products, equipment, factories, shipping logistics, warehouses, and storefronts.
 
-    -  to gain insight into the current state of the supply chain.
+2. To gain insight into the current state of the supply chain.
 
-    - analyze historical data to track successful product deliveries or determine the root cause of unsuccessful deliveries.
+3. Analyze historical data to track successful product deliveries or determine the root cause of unsuccessful deliveries.
 
-    -  to automate mitigating measures should an anomalous event occur. For example, product manufacturing could be re-routed to a secondary 'failover' factory should there be an outage at the original facility.
-    
-    - to model potential 'what if' process changes and determine their overall impact without experimenting with or impacting the current supply chain.
+4. To automate mitigating measures should an anomalous event occur. For example, product manufacturing could be re-routed to a secondary 'failover' factory should there be an outage at the original facility.
+
+5. To model potential 'what if' process changes and determine their overall impact without experimenting with or impacting the current supply chain.
 
 April 2021
 
