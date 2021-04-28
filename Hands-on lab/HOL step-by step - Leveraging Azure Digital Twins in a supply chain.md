@@ -109,7 +109,7 @@ Duration: X minutes
 
 The Azure Digital Twins PaaS service's core offering is the ability to create knowledge graphs representing an entire environment based on digital models. An environment could be a store, a city, factory, farm, or even the whole planet. Contained within an environment, you will find people, places, and things. Each model defined is significant to a business and is entirely customizable. They can be as large as the world and as small as a tiny sensor. The environment, the components found within, and the relationships between them are represented digitally using a model expressed using Digital Twin Definition Language (DTDL). Digital Twin Definition Language is based on JSON-LD (JavaScript Object Notation for Linked Data). Azure Digital Twins uses DTDL version 2. You can think of a model definition as being similar to a class in object-oriented programming. Later, you will use these model definitions to create digital twins instances representing specific entities in an environment.
 
-In this exercise, you will be assisting Contoso Apparel in defining a model representing a storeroom. In Contoso's environment, we must track the temperature and humidity telemetry coming storeroom as well as the current stock level.
+In this exercise, you will be assisting Contoso Apparel in defining a model representing a storeroom. In Contoso's environment, we must track the temperature and humidity telemetry coming from the storeroom as well as the current stock level.
 
 ### Task 1: The components of a model
 
