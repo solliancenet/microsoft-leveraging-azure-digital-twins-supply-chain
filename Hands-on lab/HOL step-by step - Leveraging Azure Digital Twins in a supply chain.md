@@ -626,9 +626,13 @@ We will be using a Logic App to simulate shipment ETA information being updated 
 
 4. From the left menu, select **Logic app designer**.
 
-5. Expand each activity of the flow. The **Recurrence** activity shows the Logic app is triggered every hour. The **Query Query Twins** activity uses the **{PREFIX}LogicAppConnector** that we built to execute a twin query retrieving all shipment twins. The **For each** activity then adds a random number of minutes to the **EstimatedTimeOfArrival** value of the shipment. This update also occurs via the **{PREFIX}LogicAppConnector** service.
+5. Expand each activity of the flow. The **Recurrence** activity shows the Logic app is triggered every hour. The **HTTP** activity issues a twin query to the Azure Digital Twins instance to retrieve all shipment twins. This activity feeds the **Parse JSON** activity that deserializes the result of the query. The **For each** activity then iterates through each query result and adds a random number of minutes to the **EstimatedTimeOfArrival** value of the shipment. This update also calls the Azure Digital Twins instance via HTTP.
 
-   ![The Logic app designer has all the activities expanded described by the text above.](media/logicapp_activities_expanded.png "Logic app designer")
+    ![The Logic app designer has the first two activities expanded described by the text above.](media/logicapp_activities_expanded.png "Logic app designer")
+
+    ![The Logic app designer has the last two activities expanded described by the text above.](media/logicapp_activities_expanded2.png "Logic app designer")
+
+6. From the left menu, select **Overview**, then select the **Enable** button from the top toolbar.
 
 > **Note**: If desired, you can choose to execute the Logic app on-demand by selecting **Run Trigger** from the **Overview** screen of the service.
 
