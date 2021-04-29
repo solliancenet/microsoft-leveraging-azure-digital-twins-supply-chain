@@ -58,7 +58,6 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 3: View incoming telemetry using Time Series Insights](#task-3-view-incoming-telemetry-using-time-series-insights)
   - [After the hands-on lab](#after-the-hands-on-lab)
     - [Task 1: Delete resource group](#task-1-delete-resource-group)
-    - [Task 2: Delete the Active Directory app registration](#task-2-delete-the-active-directory-app-registration)
 <!-- /TOC -->
 
 # Leveraging Azure Digital Twins in a supply chain hands-on lab step-by-step
@@ -638,7 +637,7 @@ We will be using a Logic App to simulate shipment ETA information being updated 
 
 ### Task 4: Simulating a real device and updating digital twins via telemetry ingestion
 
-The best way to update device twin information is to base it on live data being ingested directly from the environment in real time. In this task, we will setup an event grid subscription to feed an Azure Function that will then process the incoming messages and update digital twins accordingly.
+The best way to update device twin information is to base it on live data being ingested directly from the environment in real-time. In this task, we will setup an event grid subscription to feed an Azure Function that will then process the incoming messages and update digital twins accordingly.
 
 1. In the [Azure portal](https://portal.azure.com), open the lab resource group and select the **IoT Hub** resource (**{PREFIX}iothub**).
 
@@ -669,13 +668,13 @@ The best way to update device twin information is to base it on live data being 
 
    ![Console output displays with the principalId value highlighted.](media/azurefunctions_msi_consoleoutput.png "Console output of MSI creation")
 
-7. Now we'll assign the Azure Functions managed service identity (MSI) permissions to the Azure Digital Twins service by assigning it the **Digital Twins Data Owner** role. In the CLI command window, and issue the following command (replacing RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME and PRINCIPAL_ID with your values):
+7. Now, we'll assign the Azure Functions managed service identity (MSI) permissions to the Azure Digital Twins service by assigning it the **Digital Twins Data Owner** role. In the CLI command window, and issue the following command (replacing RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME and PRINCIPAL_ID with your values):
 
     ```Bash
     az dt role-assignment create -g RESOURCE_GROUP_NAME --dt-name DIGITAL_TWINS_INSTANCE_NAME --assignee "PRINCIPAL_ID" --role "Azure Digital Twins Data Owner"
     ```
 
-8. We will now configure our Azure Digital Twins Explorer application that is running locally to register for real-time updates using SignalR. We will need to create a route from the Azure Digital Twins service to a broker Azure Function to update SignalR with the incoming data.
+8. We will now configure our Azure Digital Twins Explorer application to register for real-time updates using SignalR. We will need to create a route from the Azure Digital Twins service to a broker Azure Function to update SignalR with the incoming data.
 
    1. In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME with your values):
 
@@ -683,7 +682,7 @@ The best way to update device twin information is to base it on live data being 
         az dt route create -g RESOURCE_GROUP_NAME --dt-name DIGITAL_TWINS_INSTANCE_NAME --endpoint-name DTEndpoint --route-name DTRoute
         ```
 
-   2. In the Azure portal, open the lab resource group and select the **{PREFIX}eventgrid** Event Grid Topic resource.
+   2. In the Azure portal, open the lab resource group and select the **{PREFIX}EventGrid** Event Grid Topic resource.
 
    3. Select **+ Event Subscription** from the top toolbar menu.
 
@@ -706,7 +705,7 @@ The best way to update device twin information is to base it on live data being 
 
    3. Select the **iothubowner** policy from the left menu.
 
-   4. In the **iothubowner** blade, select the **Copy** button next to the **Connection string - primary key** text box. Record this value for a future task.
+   4. In the **iothubowner** blade, select the **Copy** button next to the **Primary connection string** text box. Record this value for a future task.
 
         ![The iothubowner blade displays with the Copy button highlighted next to the primary connection string value.](media/iothubowner_primaryconnectionstring.png "iothubowner policy blade")
 
@@ -726,8 +725,6 @@ The best way to update device twin information is to base it on live data being 
 
 15. Identify a device in the output that you would like to track, and use the Azure Digital Twins Explorer application to query for and view the properties.
 
-> **Note**: Telemetry will appear in the PROPERTY panel of the Digital Twins Explorer tool.
-
 ## Exercise 6: Visualizing incoming data with Azure Time Series Insights
 
 Duration: X minutes
@@ -740,13 +737,17 @@ The capability of querying digital twins either via CLI or via the Azure Digital
 
 2. In the list of resources, select the **{PREFIX}tsi** Time Series Insights environment resource.
 
-3. From the left menu, select **Access control (IAM)**.
+3. From the left menu, select **Data Access Policies** from beneath the **Settings** section.
 
-4. Select **+ Add**, then **Add role assignment** from the top toolbar menu.
+4. Select **+ Add** from the top toolbar menu.
 
-5. In the **Add role assignment** blade, select the **Reader** role, then search for and select your Azure user account, identified by your Azure login email address. Select **Save**.
+5. In the **Select User Role** form, select the **Select user** link.
 
-6. Repeat steps 4 and 5, this time granting yourself the **Contributor** role.
+6. In the **Select User** blade, search for your account, and choose **Select**.
+
+7. Check both the **Reader** and **Contributor** checkboxes, then select **Save**.
+
+    ![The Select User Role form is shown with a user selected and both the Reader and Contributor roles checked.](media/tsi_selectuserrole.png "Select User Role")
 
 ### Task 2: Create a route from Azure Digital Twins for Time Series Insights
 
@@ -756,7 +757,7 @@ The capability of querying digital twins either via CLI or via the Azure Digital
     az dt route create -g RESOURCE_GROUP_NAME -n DIGITAL_TWINS_INSTANCE_NAME --endpoint-name EventHubEndpoint --route-name EventHubRoute --filter "type = 'Microsoft.DigitalTwins.Twin.Update'"
     ```
 
-2. Establishing this route will provide data into an event hub located in the **{PREFIX}eventhubnamespaces** resource of the lab resource group. This event hub (**tsieventhub**) exposes a **tsi-preview** consumer group which are used as the Event Source of the Time Series Insights environment.
+2. Establishing this route will provide data into an event hub located in the **{PREFIX}eventhubnamespaces** resource of the lab resource group. This event hub (**tsieventhub**) exposes a **tsi-preview** consumer group which is used as the Event Source of the Time Series Insights environment.
 
 ### Task 3: View incoming telemetry using Time Series Insights
 
@@ -770,6 +771,12 @@ The capability of querying digital twins either via CLI or via the Azure Digital
 
 5. Select **Overview**, then select **Go to TSI Explorer** button from the top toolbar.
 
+6. From the left menu of the designer, select a twin and choose to add all items in the list. This will add the relative graphs to the canvas.
+
+    ![A twin is selected from the left list, all measures are selected and the Add button is highlighted.](media/tsi_addvisualizations.png "Add TSI visualization")
+
+    ![The resulting graph displays in the TSI canvas.](media/resulting_tsigraph.png "TSI visualization")
+
 ## After the hands-on lab
 
 Duration: X minutes
@@ -777,13 +784,5 @@ Duration: X minutes
 ### Task 1: Delete resource group
 
 1. In the [Azure Portal](https://portal.azure.com), delete the resource group you created for this lab.
-
-### Task 2: Delete the Active Directory app registration
-
-1. In the [Azure Portal](https://portal.azure.com), expand the left menu and select **Azure Active Directory**.
-
-2. From the left menu, select **App registrations**.
-
-3. Select the **mcw-adt** registration, then select **Delete** from the top toolbar menu.
 
 You should follow all steps provided *after* attending the Hands-on lab.
