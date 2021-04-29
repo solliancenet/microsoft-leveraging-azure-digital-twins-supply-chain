@@ -105,7 +105,7 @@ Refer to the Before the hands-on lab setup guide manual before continuing to the
 
 ## Exercise 1: Authoring Digital Twins Definition Language (DTDL) models
 
-Duration: X minutes
+Duration: 20 minutes
 
 The Azure Digital Twins PaaS service's core offering is the ability to create knowledge graphs representing an entire environment based on digital models. An environment could be a store, a city, factory, farm, or even the whole planet. Contained within an environment, you will find people, places, and things. Each model defined is significant to a business and is entirely customizable. They can be as large as the world and as small as a tiny sensor. The environment, the components found within, and the relationships between them are represented digitally using a model expressed using Digital Twin Definition Language (DTDL). Digital Twin Definition Language is based on JSON-LD (JavaScript Object Notation for Linked Data). Azure Digital Twins uses DTDL version 2. You can think of a model definition as being similar to a class in object-oriented programming. Later, you will use these model definitions to create digital twins instances representing specific entities in an environment.
 
@@ -320,7 +320,7 @@ It is recommended that you validate your DTDL models offline prior to loading th
 
 ## Exercise 2: Loading models into Azure Digital Twins
 
-Duration: X minutes
+Duration: 25 minutes
 
 In the previous exercise, we learned how to author and validate DTDL models. In this exercise, we will load these models into the Azure Digital Twins Azure service.
 
@@ -420,7 +420,7 @@ The Azure Digital Twins Explorer provides an intuitive user interface to manage 
 
     ![The Azure Digital Twins Explorer MODELS blade displays with the Upload a Model button highlighted.](media/adte_uploadamodelbutton.png "Azure Digital Twins Explorer Upload a Model")
 
-3. Navigate to the lab **models** folder (`Hands-on lab/Resources/models`). Select all the files with the ***.json** extension in this folder. The dialog allows uploading multiple files at once.
+3. Navigate to the lab **models** folder (`Hands-on lab/Resources/models`). The dialog allows uploading multiple files at once. Select all the files with the ***.json** extension in this folder, excluding **storeroom.json** since we've already uploaded this one via the CLI.
 
 4. Verify that you have all 11 models loaded to the Azure Digital Twins instance.
 
@@ -430,7 +430,7 @@ The Azure Digital Twins Explorer provides an intuitive user interface to manage 
 
 ## Exercise 3: Creating digital twin instances to build an environment knowledge graph
 
-Duration: X minutes
+Duration: 20 minutes
 
 Now that we've modeled the entities in our environment, we are ready to create digital twin instances based on these models to represent the real-world artifacts. In this exercise, we will continue assisting Constoso Apparel with defining four of the storeroom instances that exist in their environment.
 
@@ -480,11 +480,13 @@ We will use the Azure Digital Twins Explorer web application to create two addit
 
    ![The TWIN GRAPH canvas displays with two circles representing both storerooms that were defined in this task.](media/adte_twingraph_twostorerooms.png "TWIN GRAPH")
 
-6. You may be wondering where the other two storerooms are that we had defined in the CLI. To refresh the TWIN GRAPH, select the **Run Query** button from the QUERY EXPLORER section near the top of the screen. This operation queries the Azure Digital Twins service and returns all digital twins instances.
+6. You may be wondering where the other two storerooms are that we had defined in the CLI. To refresh the **TWIN GRAPH**, select the **Run Query** button from the **QUERY EXPLORER** section near the top of the screen. This operation queries the Azure Digital Twins service and returns all digital twins instances.
 
     ![The TWIN GRAPH canvas displays with four circles representing all the storeroom digital twins that are defined.](media/adte_twingraph_fourstorerooms.png "TWIN GRAPH")
 
-7. Keep the Azure Digital Twins Explorer web application open for later tasks.
+7. In the **TWIN_GRAPH**, while holding the **Shift** key, select each of the four storeroom twins that we have created. Right-click to view the context menu, and select **Delete twin(s)**. We are doing this clean up so that they can be recreated in a different way in the next task.
+
+8. Keep the Azure Digital Twins Explorer web application open for later tasks.
 
 ### Task 3: Importing digital twin instances using a spreadsheet
 
@@ -506,7 +508,7 @@ Creating digital twin instances one by one via CLI and in the Azure Digital Twin
 
     ![The Import Successful dialog displays indicating 152 twins have been imported along with 162 relationships](media/adte_graphimportsuccess_dialog.png "Azure Digital Twins Explorer Import Successful dialog")
 
-6. Your graph should look substantially larger now.
+6. Select the **TWIN GRAPH** tab and refresh it by selecting **Run Query**. Your graph should look substantially larger now.
 
    ![The TWINS GRAPH displays with many additional nodes.](media/adte_fulltwinsgraph.png "Updated TWINS GRAPH")
 
@@ -524,7 +526,7 @@ Creating digital twin instances one by one via CLI and in the Azure Digital Twin
 
 ## Exercise 4: Querying and visualizing the Azure Digital Twins graph
 
-Duration: X minutes
+Duration: 5 minutes
 
 The ability to query digital twins can provide insight into the current state of elements and operations in an environment. Azure Digital Twins provides a SQL-like [Azure Digital Twins query language](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-query-language) to query and filter digital twins according to their properties, tag properties, models, relationships, and properties of relationships.
 
@@ -569,7 +571,7 @@ It is critical that digital twins remain up-to-date with their real-world counte
 1. In the CLI command window, execute the following command to update the **StockLevel** in storeroom **SR9036** to **42** (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name). Because this is our first time setting this value, we need to use the **add** operation.
 
     ```Bash
-    az dt twin update -g RESOURCE_GROUP_NAME -n ADT_INSTANCE_NAME --twin-id "SR90636" --json-patch '{"op":"add","path":"/StockLevel","value":42}'
+    az dt twin update -n ADT_INSTANCE_NAME -g RESOURCEGROUP --twin-id "SR90636" --json-patch "{\"op\":\"add\",\"path\":\"/StockLevel\",\"value\":42}"
     ```
 
 2. Use the CLI to view the updated value by executing the following command (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
