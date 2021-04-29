@@ -558,7 +558,7 @@
                                             {
                                                 "op": "replace",
                                                 "path": "/EstimatedTimeOfArrival",
-                                                "value": "@addMinutes(body('Parse_JSON')?['value'])"
+                                                "value": "@{addMinutes(utcNow(), rand(5760, 6800))}"
                                             }
                                         ],
                                         "method": "PATCH",
