@@ -608,105 +608,25 @@ Azure Logic Apps is a cloud service that helps you automate workflows across app
 
 We will be using a Logic App to simulate shipment ETA information being updated from an ERP system. However, our Logic App runs on a timer that will randomly update the ETA for demonstration purposes.
 
-1. We will first need to create an app registration and configure it with the right permissions to allow communication with the DigitalTwins resource.
+1. We will first need grant the logic app Managed Service Identity permission to communicate with the DigitalTwins resource.
 
-   1. In the [Azure Portal](https://portal.azure.com), expand the left hamburger menu and select **Azure Active Directory**.
+   1. In the [Azure Portal](https://portal.azure.com), open the lab resource group.
 
-   2. Select **App registrations**.
+   2. Select the Azure Digital Twins service resource **{PREFIX}digtwins**.
 
-   3. Select **+ New registration**.
+   3. From the left menu, select **Access control (IAM)**.
 
-   4. In the **Register an application** form, enter **mcw-adt** in the **Name** field. Select **Register**.
+   4. Expand the **+ Add** button menu and select **Add role assignment**.
 
-      ![A portion of the Register an application form is displayed with the mcw-adt in the Name field.](media/aad_registerapp_form.png "AAD application registration")
+   5. In the **Add role assignment** blade, select **Azure Digital Twins Data Owner** as the role. In the search box, search for and select your logic app name **{PREFIX}ShipmentArrivalTimeUpdateApp**. Select **Save**.
 
-   5. In the **mcw-adt** application screen, select **Certificates and secrets** from the left menu.
+2. Let's review the Logic application. In the [Azure Portal](https://portal.azure.com), open the lab resource group. Select the **Logic app** resource named **{PREFIX}ShipmentArrivalTimeUpdateApp**.
 
-   6. Select **+ New client secret** beneath the **Client secrets** heading.
+3. On the **Overview** screen of the Logic app, ensure the app is **Enabled**. If you see **Enable** in the toolbar menu, select it.
 
-   7. In the **Add a client secret** blade, enter **MCW ADT Secret** for the description, and retain the default value in the **Expires** field. Select **Add**.
+4. From the left menu, select **Logic app designer**.
 
-      ![The Add a client secret form is shown populated with the values described in this step.](media/aad_appsecret_addform.png "Add a client secret form")
-
-   8. The client secret is now displayed in the **Client secrets** section of the page. Record the **Value** of the secret for later use in this lab.
-
-      ![The MCW ADT secret is shown beneath the Client secrets heading. The Copy icon next to the Value is highlighted.](media/aad_application_clientsecret_copyvalue.png "Application Client secrets")
-
-   9. From the left menu, select **Overview**. Then record the **Application (client) ID** and **Directory (tenant) ID** values for later use in this lab.
-
-      ![A portion of the Azure Active Directory Overview screen is shown with the Application and Directory ID values highlighted.](media/aad_application_overview.png "Azure Active Directory application Overview screen")
-
-2. Azure Digital Twins does not currently have a certified (pre-built) connector for Logic Apps. Instead, the current process for using Logic Apps with Azure Digital Twins is to create a custom Logic Apps connector. The connector resource was already created in the **Before the HOL** deployment, but we will need to do the configuration and authentication manually.
-
-   1. In [Azure portal](https://portal.azure.com), open the lab resource group and select the **Logic apps custom connector** resource.
-        ![A portion of the lab resources listing is shown with the Logic apps custom connector resource highlighted.](media/rg_listing_logicappconnector.png "Resource group listing")
-
-   2. On the **Overview** screen, select the **Edit** button from the toolbar.
-
-   3. In the **General** step, in the **Custom connectors** section, fill out the form as follows:
-
-      | Field | Value|
-      |-------|------|
-      | API endpoint | REST |
-      | Import mode | OpenAPI file |
-      | Import mode file | Select **Import**, then choose **digitaltwins.json** located in the folder (`Hands-on lab/Resources/deployment`). |
-
-   4. In the **General** step, in the **General information** section, set the **Host** field to the **Host name** value of your **Azure Digital Twins** service. Leave all other values as their defaults. In the top toolbar, select **Update connector**.
-
-      ![A portion of the Edit Logic Apps Custom Connector toolbar displays with the Update connector button highlighted.](media/logicappconnector_updateconnectorbutton.png "Update connector")
-
-   5. In the top toolbar, select the **2.Security** step.
-   6. In the **Authentication type**, select the **Edit** button. Choose **OAuth 2.0** for the authentication type.
-   7. In the **OAuth 2.0** form, enter the following values (keep all other fields with their default values):
-
-        | Field | Value |
-        |-------|-------|
-        | Identity provider | Azure Active Directory |
-        | Client id | Enter the Application (client) ID for your Azure AD app registration. |
-        | Client secret | Enter the value of the client secret you created. |
-        | Tenant ID | Enter the Directory (tenant) ID for your Azure AD app registration. |
-        | Resource URL | 0b07f429-9f4b-4714-9392-cc5e8e80c8b0 |
-        | Scope | Directory.AccessAsUser.All |
-
-   8. In the top toolbar, select **Update connector**. Updating the connector populates the Redirect URL field. Record this value for use later on in this lab.
-
-   9. Close the **Edit Logic Apps Custom Connector** pane by clicking the **X** in the top corner.
-
-3. Next, we'll use the custom connector's Redirect URL value you copied in the last step to grant the connector permissions in your app registration.
-
-   1. In the [Azure portal](https://portal.azure.com), expand the left menu and select **Azure Active Directory**.
-
-   2. From the left menu, select **App registrations**.
-
-   3. Select the registration you created earlier (**mcw-adt**).
-
-   4. Select **Authentication** from the left menu.
-
-   5. Select **+ Add a platform** from beneath the **Platform configurations** section.
-
-   6. In the **Configure platforms** blade, select **Web**.
-
-   7. In the **Configure Web** blade, enter the **Redirect URL** value that you recorded earlier, and ensure the **Access tokens** and **ID tokens** checkboxes are checked. Select **Configure**.
-
-       ![The Configure Web blade is shown with the Redirect URI field highlighted and the Access tokens and ID tokens checkboxes checked.](media/aad_application_webplatformauth.png "Configure Web form")
-
-4. We are now able to authorize the connector.
-
-   1. In the Azure Portal, navigate to the lab resource group and select the API Connection resource named **{PREFIX}ApiConnection**.
-
-   2. From the left menu, select **Edit API connection**.
-
-   3. On the **Edit API connection** screen, select **Authorize**.
-
-   4. Select **Save**.
-
-5. Let's review the Logic application. In the [Azure Portal](https://portal.azure.com), open the lab resource group. Select the **Logic app** resource named **{PREFIX}ShipmentArrivalTimeUpdateApp**.
-
-6. On the **Overview** screen of the Logic app, ensure the app is **Enabled**. If you see **Enable** in the toolbar menu, select it.
-
-7. From the left menu, select **Logic app designer**.
-
-8. Expand each activity of the flow. The **Recurrence** activity shows the Logic app is triggered every hour. The **Query Query Twins** activity uses the **{PREFIX}LogicAppConnector** that we built to execute a twin query retrieving all shipment twins. The **For each** activity then adds a random number of minutes to the **EstimatedTimeOfArrival** value of the shipment. This update also occurs via the **{PREFIX}LogicAppConnector** service.
+5. Expand each activity of the flow. The **Recurrence** activity shows the Logic app is triggered every hour. The **Query Query Twins** activity uses the **{PREFIX}LogicAppConnector** that we built to execute a twin query retrieving all shipment twins. The **For each** activity then adds a random number of minutes to the **EstimatedTimeOfArrival** value of the shipment. This update also occurs via the **{PREFIX}LogicAppConnector** service.
 
    ![The Logic app designer has all the activities expanded described by the text above.](media/logicapp_activities_expanded.png "Logic app designer")
 
