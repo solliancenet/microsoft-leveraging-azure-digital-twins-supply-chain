@@ -497,7 +497,7 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 2. Our supply chain is a continuously running system, 24 hours a day, 7 days a week. As such, the state of each of our elements is in a constant state of change. How can we ensure the accuracy of our digital models? How will these be kept up-to-date?
 
-    Contoso should leverage the integration between IoT Hub and Azure Digital Twins as a way to keep their digital models up to date. They can also update Azure Digital Twins from other data sources that are able to use REST APIs (and SDKs) or with connectors to other services like Logic Apps.
+    Contoso should leverage an Azure Function integration between IoT Hub and Azure Digital Twins as a way to keep their digital models up to date. They can also update Azure Digital Twins from other data sources that are able to use REST APIs (and SDKs) or with connectors to other services like Logic Apps.
 
 3. We want to track a manufactured product such as a T-Shirt from its manufacturing on a factory floor, delivery to a warehouse, then to a store. Finally, we'd like to trace the T-Shirt through its purchase at a store by a customer. Is this level of tracing even possible?
 
