@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
+![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
 Leveraging Azure Digital Twins in a supply chain
@@ -399,7 +399,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 Courtney Laval, Chief Technical Officer (CTO), Contoso Apparel.
 
-The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Courtney Laval, CTO of Comntoso Apparel. Usually we talk to the infrastructure managers who report to the chief information officers (CIOs), or to application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
+The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Courtney Laval, CTO of Contoso Apparel. Usually we talk to the infrastructure managers who report to the chief information officers (CIOs), or to application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
 
 ## Preferred solution
 

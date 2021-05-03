@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
+![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
 Leveraging Azure Digital Twins in a supply chain
@@ -91,6 +91,30 @@ Duration: 25 minutes
 3. Select **Review + create**.
 
 4. Select **Create**.
+
+This ARM template will deploy the services necessary to support this lab. You can refer to the Solution architecture in the Hands-on lab for a visualization. The services deployed include:
+
+1. Azure Digital Twins
+
+2. Function App
+
+3. Event Grid Topic
+
+4. Event Hubs Namespace
+
+5. IoT Hub
+
+6. App Service plan
+
+7. Logic app
+
+8. Storage account
+
+9. Time Series Insights environment
+
+10. Time Series Insights event source
+
+11. SignalR
 
 ## Task 3: Download the lab files
 
