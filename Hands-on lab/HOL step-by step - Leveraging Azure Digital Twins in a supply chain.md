@@ -561,7 +561,7 @@ The ability to query digital twins can provide insight into the current state of
 
 ## Exercise 5: Keeping Azure Digital Twin instances up-to-date
 
-Duration: X minutes
+Duration: 60 minutes
 
 It is critical that digital twins remain up-to-date with their real-world counterparts. In this exercise, we'll review some different approaches to updating digital twins.
 
@@ -727,7 +727,7 @@ The best way to update device twin information is to base it on live data being 
 
 ## Exercise 6: Visualizing incoming data with Azure Time Series Insights
 
-Duration: X minutes
+Duration: 20 minutes
 
 The capability of querying digital twins either via CLI or via the Azure Digital Twins Explorer application is very useful to discover the point-in-time state of the environment. Further reporting is possible through feeding incoming digital twins updates to Time Series Insights.
 
@@ -777,9 +777,11 @@ The capability of querying digital twins either via CLI or via the Azure Digital
 
     ![The resulting graph displays in the TSI canvas.](media/resulting_tsigraph.png "TSI visualization")
 
+7. Spend additional time adding additional visualizations to the Time Series Insights canvas.
+
 ## After the hands-on lab
 
-Duration: X minutes
+Duration: 5 minutes
 
 ### Task 1: Delete resource group
 

@@ -481,11 +481,13 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 1. How do you suggest implementing failover in the event that a factory needs to be taken offline for maintenance?
 
+   The Azure Digital Twins service supports the creation of event routes to send event data to custom-defined endpoints in your subscriptions. One supported event type is the **Digital Twin Change Notification (Microsoft.DigitalTwins.Twin.Update)** that is emitted every time a digital twin property changes. An event route can be configured to feed updates through an event hub that triggers an Azure Function for further processing. This Azure Function can monitor for a factory becoming offline and contain the custom business logic required to perform the failover.
+
 *Data visualization*
 
 1. Contoso apparel needs to be able to perform ad-hoc queries and visualize historical data. What Azure service(s) would you suggest for this?
 
-    Azure Time Series insights allows for ad-hoc queries and visualization of historical data. Alternatively, data could be forwarded to other analysis services such as Azure Synapse Analytics and take advantage of visualization capabilities such as serverless SQL, Apache Spark, and Power BI.
+    Azure Time Series insights allows for ad-hoc queries and visualization of historical data. Alternatively, data could be forwarded to other analysis services such as Azure Synapse Analytics to take advantage of visualization capabilities such as serverless SQL, Apache Spark, and Power BI.
 
 ## Checklist of preferred objection handling
 
@@ -499,8 +501,10 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 3. We want to track a manufactured product such as a T-Shirt from its manufacturing on a factory floor, delivery to a warehouse, then to a store. Finally, we'd like to trace the T-Shirt through its purchase at a store by a customer. Is this level of tracing even possible?
 
+    Yes! Create a digital twin instance for the T-Shirt. Using Azure Digital Twins Explorer, you can initiate a query to obtain the current status of the twin. Create an event route so that twin updates are sent to Azure Time Series Insights (via an Event Hub and an Azure Function). Azure Time Series insights allow for retrieving historical data based on the digital twin instance to view its state over time, including the ability to view this information in tabular format. As an alternative, an Azure Function can implement logic to store T-Shirt lifecycle information in a data store that serves a custom web application. This web application can implement custom visualizations and receive twin updates near real-time via SignalR.
+
 ## Customer quote (to be read back to the attendees at the end)
 
-"When we started looking into modeling our existing IoT environment, it felt like we were to embark on an extremely complicated, proprietary, and lengthy process. We are pleasantly surprised with how we were quickly able to grasp DTDL and the many different approaches we can take to ensure our digital twins up to date. We now have an architecture in place that allows us to not only query the current state of our environment, but we also have the ability to push updates to other visualization tools like Azure Time Series Insights, and our web applications by leveraging SignalR!"
+"When we started looking into modeling our existing IoT environment, it felt like we were to embark on an extremely complicated, proprietary, and lengthy process. We are pleasantly surprised with how we were quickly able to grasp DTDL and the many different approaches we can take to ensure our digital twins are up to date. We now have an architecture in place that allows us to not only query the current state of our environment, but we also have the ability to push updates to other visualization tools like Azure Time Series Insights, and our web applications by leveraging SignalR!"
 
 Courtney Laval, Chief Technical Officer (CTO), Contoso Apparel.
