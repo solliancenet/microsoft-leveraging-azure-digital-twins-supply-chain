@@ -39,11 +39,11 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 1. Azure Subscription with the following permissions or capabilities:
 
-  - Create and manage Azure resources
+   - Create and manage Azure resources
 
-  - Manage user access to Azure resources (including granting and delegating permissions)
+   - Manage user access to Azure resources (including granting and delegating permissions)
 
-   > **Note**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
+    > **Note**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
 
 2. [Azure CLI 2.3.1+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
