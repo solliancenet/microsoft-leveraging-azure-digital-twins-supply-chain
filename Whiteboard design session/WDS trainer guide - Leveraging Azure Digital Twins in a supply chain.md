@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
+![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
 Leveraging Azure Digital Twins in a supply chain
@@ -9,7 +9,7 @@ Whiteboard design session trainer guide
 </div>
 
 <div class="MCWHeader3">
-April 2021
+May 2021
 </div>
 
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
@@ -399,7 +399,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 Courtney Laval, Chief Technical Officer (CTO), Contoso Apparel.
 
-The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Courtney Laval, CTO of Contoso Apparel. Usually we talk to the infrastructure managers who report to the chief information officers (CIOs), or to application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
+The primary audience is the business decision makers and technology decision makers. From the case study scenario, this includes Courtney Laval, CTO of Contoso Apparel. Usually, we talk to the infrastructure managers who report to the chief information officers (CIOs), or to application sponsors (like a vice president [VP] line of business [LOB], or chief marketing officer [CMO]), or to those who represent the business unit IT or developers that report to application sponsors.
 
 ## Preferred solution
 
@@ -431,7 +431,7 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 3. What methods are available for Contoso to add these entities to their environment knowledge graph?
 
-    Data plane APIs are the Azure Digital Twins APIs used to manage the elements within your Azure Digital Twins instance. They include operations like creating routes, uploading models, creating relationships, and managing twins.These are available as **REST APIs**. Calling these APIs is also made available via a variety of **SDKs** supporting languages such as C#, Java, JavaScript, and Python. Calling these APIs are automated in the **Digital Twins Explorer** application if you desire a user interface to upload your models.
+    Data plane APIs are the Azure Digital Twins APIs used to manage the elements within your Azure Digital Twins instance. They include operations like creating routes, uploading models, creating relationships, and managing twins. These are available as **REST APIs**. Calling these APIs is also made available via a variety of **SDKs** supporting languages such as C#, Java, JavaScript, and Python. Calling these APIs are automated in the **Digital Twins Explorer** application if you desire a user interface to upload your models.
 
     The data plane APIs can be broadly divided into the following categories:
 
