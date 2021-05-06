@@ -1,4 +1,4 @@
-![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
+![Microsoft Cloud Workshops](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/main/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
 Leveraging Azure Digital Twins in a supply chain
@@ -9,7 +9,7 @@ Hands-on lab step-by-step
 </div>
 
 <div class="MCWHeader3">
-April 2021
+May 2021
 </div>
 
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
@@ -64,7 +64,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 ## Abstract and learning objectives
 
-In this hands-on lab, you will deploy an end-to-end supply chain IoT solution. You will learn how to model the physical world using Device Twin Definition Language (DTDL) and use the CLI and the Azure Digital Twins Explorer tool to create, update, and query the current state of an environment. You will also learn various ways of keeping Digital Twin instances up-to-date with the real world. You will learn about event routing and how to leverage the Azure Digital Twins service update events as event sources for Azure Time Series Insights and SignalR.
+In this hands-on lab, you will implement an Azure IoT solution for a supply chain scenario. You will learn to interpret and author Digital Twin Definition Language (DTDL) that models physical and logical elements of an environment. You will use DTDL to represent an element's properties, telemetry, components, and relationships. Next, you will learn how to deploy the models into Azure Digital Twins and visualize them using Azure Digital Twins Explorer. You will learn how to leverage Azure Digital Twins by deploying an end-to-end IoT solution, including identifying anomalies and automating automatic failover of factory work using eventing.
+
+At the end of this hands-on lab, you will be better able to implement an end-to-end Azure IoT supply chain solution from telemetry ingestion to data insights, all while leveraging Azure Digital Twins.
 
 ## Overview
 
@@ -80,11 +82,11 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
 1. Azure Subscription with the following permissions or capabilities:
 
-   1. Create and manage Azure resources
+   - Create and manage Azure resources
 
-   2. Manage user access to Azure resources (including granting and delegating permissions)
+   - Manage user access to Azure resources (including granting and delegating permissions)
 
-    > **NOTE**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
+    > **Note**: Common roles that meet this requirement are Owner, Account admin, or the combination of User Access Administrator and Contributor.
 
 2. [Azure CLI 2.3.1+](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
@@ -172,9 +174,9 @@ Here is an example of a Planet model. Model files should be saved with the **.js
   
 ```
 
-> **TIP**: DTDL also supports model inheritance using the **extends** field.
+> **Tip**: DTDL also supports model inheritance using the **extends** field.
 
-Let's now continue this exercise by defining a model for a storeroom using DTDL. Feel free to refer to the [DTDL specification](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md) as a reference.
+Now we'll continue this exercise by defining a model for a storeroom using DTDL. Feel free to refer to the [DTDL specification](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/dtdlv2.md) as a reference.
 
 1. Let's begin by defining the interface for a storeroom. Open Visual Studio Code to the `Hands-on lab/Resources/models` folder, and create a new file named **storeroom.json**. Add the following text to this file:
 
@@ -194,7 +196,7 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
     | @type | indicates the kind of information being described |
     | displayName | the friendly name of the model being described |
 
-2. Now that we've defined our interface, we are able to define the contents of the model. Let's start with the properties of a storeroom. The current stock level is a property that Contoso Apparel needs to track and query. Continuing in the same file, add the following beneath the **displayName** field (remember to add a comma after the displayName value!):
+2. Now that we've defined our interface, we are able to define the contents of the model. Let's start with the properties of a storeroom. The current stock level is a property that Contoso Apparel needs to track and query. Continuing in the same file, add the following beneath the **displayName** field (Remember to add a comma after the displayName value!):
 
     ```JavaScript
     "contents": [
@@ -207,7 +209,7 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
     ]
     ```
 
-3. Let's define the telemetry of a storeroom. In the case of Contoso Apparel's sensors, a storeroom sends a consistent stream of integer temperature and humidity values. Within the **contents** array, add the following telemetry definitions (remember to add a comma after the StockLevel object definition):
+3. Let's define the telemetry of a storeroom. In the case of Contoso Apparel's sensors, a storeroom sends a consistent stream of integer temperature and humidity values. Within the **contents** array, add the following telemetry definitions (Remember to add a comma after the StockLevel object definition.):
 
     ```JavaScript
     {
@@ -269,13 +271,13 @@ Let's now continue this exercise by defining a model for a storeroom using DTDL.
 
 In the previous task, we created a model definition of a storeroom manually. In this task, we'll investigate pre-existing model sets aligned to specific industries, also referred to as an ontology. Currently, there are two open-source DTDL ontologies that leverage industry standards in their model definitions. These are the [real estate industry smart building](https://github.com/Azure/opendigitaltwins-building), and the [smart city industry](https://github.com/Azure/opendigitaltwins-smartcities). You can take advantage of these existing ontologies to form the basis of your model definitions. You can adopt them as-is and extend them as needed using model inheritance.
 
-1. An ontology provides a common representation of places, infrastructure, and assets to enable interoperability and data sharing across multiple domains. In a new browser window or tab, visit the following URL [https://github.com/Azure/opendigitaltwins-building](https://github.com/Azure/opendigitaltwins-building).
+1. An ontology provides a common representation of places, infrastructure, and assets to enable interoperability and data sharing across multiple domains. In a new browser window or tab, visit the following URL: [https://github.com/Azure/opendigitaltwins-building](https://github.com/Azure/opendigitaltwins-building).
 
-2. This ontology is representative of the **RealEstateCore** ontology for smart buildings. Take a moment and review the structure as well as the motivations behind this ontology by reading through the README.md article found at this URL. This article also describes how to extend and contribute to this ontology.
+2. This ontology is representative of the **RealEstateCore** ontology for smart buildings. Take a moment and review the structure as well as the motivations behind this ontology by reading the README.md article found at this URL. This article also describes how to extend and contribute to this ontology.
 
 3. Remaining on this website, navigate into the **Ontology/Space/Building/Building.json** file to view the definition of a building. Note that this model extends the **Space** definition located at **Ontology/Space/Space.json**.
 
-4. You are also able to visualize and interact with the **RealEstateCore** ontology by opening the following URL in a new tab or window [http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/](http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/).
+4. You are also able to visualize and interact with the **RealEstateCore** ontology by opening the following URL in a new tab or window: [http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/](http://www.visualdataweb.de/webvowl/#iri=https://w3id.org/rec/full/3.3/).
 
     ![The RealEstateCore model visualization graph is displayed.](media/realestatecorevisualization.png "RealEstateCore model visualization")
 
@@ -327,7 +329,7 @@ In the previous exercise, we learned how to author and validate DTDL models. In 
 
 Specific permissions are required to have the ability to maintain models in the Azure Digital Twins service. In this exercise, you will add yourself as an **Azure Digital Twins Data Owner** using role-based access control (RBAC).
 
-1. [Azure portal](https://portal.azure.com), open the resource group you created for this lab.
+1. In the [Azure portal](https://portal.azure.com), open the resource group you created for this lab.
 
 2. Select the Azure Digital Twins service from the list named **{PREFIX}digtwins**, where `PREFIX` is the generated value or the prefix you specified in the **Before the HOL** steps.
 
@@ -357,7 +359,7 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
 
 4. Open a command prompt on your local machine.
 
-5. Issue the following Azure CLI command to ensure that you are using the latest version of the Azure IoT extension for Azure CLI.
+5. Issue the following Azure CLI command to ensure that you are using the latest version of the Azure IoT extension for Azure CLI:
 
     ```Bash
     az extension add --upgrade -n azure-iot
@@ -369,7 +371,7 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
     az login
     ```
 
-7. Change the current directory to the **models** folder of this lab (`Hands-on lab/Resources/models`) by issuing the following command(replacing **MODEL_FOLDER_PATH** with the full path to your models folder, retaining the quote characters):
+7. Change the current directory to the **models** folder of this lab (`Hands-on lab/Resources/models`) by issuing the following command (replacing **MODEL_FOLDER_PATH** with the full path to your models folder, retaining the quote characters):
   
     ```Bash
     cd "MODEL_FOLDER_PATH"
@@ -383,7 +385,7 @@ Azure Digital Twins has a command set for the Azure CLI that you can use to perf
 
     After a few seconds, you should see output similar to the following:
 
-    ![Output from a console window is displayed showing a JSON definition of the storeroom model that was added to the Azure Digital Twins instance](media/cli_addmodel_output.png "CLI console output")
+    ![Output from a console window is displayed showing a JSON definition of the storeroom model that was added to the Azure Digital Twins instance.](media/cli_addmodel_output.png "CLI console output")
 
 9. Verify that your model was uploaded successfully by executing the following command that lists registered models with your Azure Digital Twins instance (replace RESOURCE_GROUP_NAME with the name of the lab resource group and ADT_INSTANCE_NAME with your Azure Digital Twins instance name):
   
@@ -405,7 +407,7 @@ The Azure Digital Twins Explorer is a Node.js-based single-page web application 
 
    ![A modal window is displayed prompting for the host name URL of the Azure Digital Twins service instance.](media/adtexplorer_hostnameentry.png "Azure Digital Twins Explorer Host Name Entry")
 
->**NOTE**: Prior to running the web application from the command prompt, remember to execute the **az login** command to ensure appropriate authentication.
+>**Note**: Prior to running the web application from the command prompt, remember to execute the **az login** command to ensure appropriate authentication.
 
 ### Task 4: Loading models using the Azure Digital Twins Explorer
 
@@ -609,15 +611,15 @@ We will be using a Logic App to simulate shipment ETA information being updated 
 
 1. We will first need grant the logic app Managed Service Identity permission to communicate with the DigitalTwins resource.
 
-   1. In the [Azure Portal](https://portal.azure.com), open the lab resource group.
+   - In the [Azure Portal](https://portal.azure.com), open the lab resource group.
 
-   2. Select the Azure Digital Twins service resource **{PREFIX}digtwins**.
+   - Select the Azure Digital Twins service resource **{PREFIX}digtwins**.
 
-   3. From the left menu, select **Access control (IAM)**.
+   - From the left menu, select **Access control (IAM)**.
 
-   4. Expand the **+ Add** button menu and select **Add role assignment**.
+   - Expand the **+ Add** button menu and select **Add role assignment**.
 
-   5. In the **Add role assignment** blade, select **Azure Digital Twins Data Owner** as the role. In the search box, search for and select your logic app name **{PREFIX}ShipmentArrivalTimeUpdateApp**. Select **Save**.
+   - In the **Add role assignment** blade, select **Azure Digital Twins Data Owner** as the role. In the search box, search for and select your logic app name **{PREFIX}ShipmentArrivalTimeUpdateApp**. Select **Save**.
 
 2. Let's review the Logic application. In the [Azure Portal](https://portal.azure.com), open the lab resource group. Select the **Logic app** resource named **{PREFIX}ShipmentArrivalTimeUpdateApp**.
 
@@ -676,17 +678,17 @@ The best way to update device twin information is to base it on live data being 
 
 8. We will now configure our Azure Digital Twins Explorer application to register for real-time updates using SignalR. We will need to create a route from the Azure Digital Twins service to a broker Azure Function to update SignalR with the incoming data.
 
-   1. In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME with your values):
+   - In the CLI command window, execute the following command to establish a route from the Azure Digital Twins service (replace RESOURCE_GROUP_NAME, DIGITAL_TWINS_INSTANCE_NAME with your values):
 
         ```Bash
         az dt route create -g RESOURCE_GROUP_NAME --dt-name DIGITAL_TWINS_INSTANCE_NAME --endpoint-name DTEndpoint --route-name DTRoute
         ```
 
-   2. In the Azure portal, open the lab resource group and select the **{PREFIX}EventGrid** Event Grid Topic resource.
+   - In the Azure portal, open the lab resource group and select the **{PREFIX}EventGrid** Event Grid Topic resource.
 
-   3. Select **+ Event Subscription** from the top toolbar menu.
+   - Select **+ Event Subscription** from the top toolbar menu.
 
-   4. In the **Create Event Subscription** form, fill it out as follows, then select **Create**:
+   - In the **Create Event Subscription** form, fill it out as follows, then select **Create**:
 
         | Field | Value |
         |-------|-------|
@@ -695,17 +697,17 @@ The best way to update device twin information is to base it on live data being 
         | Endpoint Type | Azure Function |
         | Endpoint | Select the **Select an endpoint** link, then choose the **{PREFIX}DTFunctions** Function app. For the Function, select the **broadcast** function. Select **Confirm Selection**. |
 
-    >**Note** Because we are running the Azure Digital Twins Explorer locally, we are not able to leverage the SignalR hub. Alternatively, you could follow guidance on deploying the Azure Digital Twins Explorer as a cloud service and configure it to receive updates from SignalR. You can find this guidance on the [Azure Digital Twins Explorer repository](https://github.com/Azure-Samples/digital-twins-explorer#advanced).
+    >**Note**: Because we are running the Azure Digital Twins Explorer locally, we are not able to leverage the SignalR hub. Alternatively, you could follow guidance on deploying the Azure Digital Twins Explorer as a cloud service and configure it to receive updates from SignalR. You can find this guidance on the [Azure Digital Twins Explorer repository](https://github.com/Azure-Samples/digital-twins-explorer#advanced).
 
 9. To enable device simulation, we will need to retrieve the IoT Hub connection string.
 
-   1. In the [Azure Portal](https://portal.azure.com), open the lab resource group and select the **IoT Hub** resource ({PREFIX}iothub).
+   - In the [Azure Portal](https://portal.azure.com), open the lab resource group and select the **IoT Hub** resource ({PREFIX}iothub).
 
-   2. From the left menu, select **Shared access policies**.
+   - From the left menu, select **Shared access policies**.
 
-   3. Select the **iothubowner** policy from the left menu.
+   - Select the **iothubowner** policy from the left menu.
 
-   4. In the **iothubowner** blade, select the **Copy** button next to the **Primary connection string** text box. Record this value for a future task.
+   - In the **iothubowner** blade, select the **Copy** button next to the **Primary connection string** text box. Record this value for a future task.
 
         ![The iothubowner blade displays with the Copy button highlighted next to the primary connection string value.](media/iothubowner_primaryconnectionstring.png "iothubowner policy blade")
 
@@ -721,7 +723,7 @@ The best way to update device twin information is to base it on live data being 
     dotnet run
     ```
 
-14. This will start the devices simulator program. When prompted, enter the command: **start** and press the **Enter** key. This simulation will register and initialize many IoT devices, then will begin sending updates. By default this simulation is set to run for 10 minutes.
+14. This will start the devices simulator program. When prompted, enter the command: **start** and press the **Enter** key. This simulation will register and initialize many IoT devices, then will begin sending updates. By default, this simulation is set to run for 10 minutes.
 
 15. Identify a device in the output that you would like to track, and use the Azure Digital Twins Explorer application to query for and view the properties.
 
