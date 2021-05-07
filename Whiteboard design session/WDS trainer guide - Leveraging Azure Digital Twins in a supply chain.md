@@ -405,7 +405,7 @@ The primary audience is the business decision makers and technology decision mak
 
 ![The solution architecture diagram is shown as explained in the following paragraph.](media/preferred_solution.png "Solution Architecture")
 
-IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service.  A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function.
+IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service.  A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function. A logic app is used to trigger digital twin updates for shipment progress.
 
 *High-level architecture*
 
@@ -453,13 +453,13 @@ IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a d
 
     Contoso Apparel should use IoT Hub, or the combination of IoT Hub and the Device Provisioning Service (DPS) to register and authenticate their IoT devices.
 
-    ![An IoT Device communicates with DPS to register, authenticate and provide telemetry to Azure Digital Twins via IoT Hub ingestion.](media/dps.png)
+    ![An IoT Device communicates with DPS to register, authenticate and provide telemetry to Azure Digital Twins via IoT Hub ingestion.](media/dps.png "Device Registration")
 
 2. How should the IoT telemetry data be ingested into Azure?
 
     Data should be ingested via IoT Hub alongside an Azure Function compute resource that processes the telemetry and updates the digital twin model.
 
-    ![An IoT Hub ](media/telemetryupdateofadt.png)
+    ![An Azure Function app is used as an intermediary to process and transform information to update Azure Digital Twins instances.](media/telemetryupdateofadt.png "IoT Hub data ingestion processed through an Azure Function to update Azure Digital Twins.")
 
 3. How would Contoso Apparel monitor for humidity anomalies in near real-time?
 

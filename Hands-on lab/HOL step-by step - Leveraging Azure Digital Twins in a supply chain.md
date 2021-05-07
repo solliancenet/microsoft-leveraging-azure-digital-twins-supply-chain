@@ -76,7 +76,7 @@ The Leveraging Azure Digital Twins in a supply chain hands-on lab is an exercise
 
 ![The solution architecture diagram is shown as explained in the following paragraph.](media/solution_architecture.png "Solution architecture")
 
-IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service. You can review this code in the `Hands-on lab/Resources/azurefunctionscode/IoTHubToTwins.cs` file. A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. The source code for this second Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/SignalRFunctions.cs` file. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function. The source code for this third Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/ProcessDTUpdateToTSI.cs` file.
+IoT sensors in Contoso Apparel's environment send telemetry into IoT Hub via a device connection string. An Azure Function is triggered on message ingestion to process the incoming telemetry and updates the appropriate digital twin in the Azure Digital Twins service. You can review this code in the `Hands-on lab/Resources/azurefunctionscode/IoTHubToTwins.cs` file. A route is established between the Azure Digital Twins Service and a second Azure Function so that the telemetry stream is made available to the SignalR service. Web applications are then able to subscribe to this SignalR hub to receive telemetry information. The source code for this second Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/SignalRFunctions.cs` file. A secondary route is established between the Azure Digital Twins service and an Event Hub intermediary to provide data into Time Series Insights via a third Azure Function. The source code for this third Azure Function is found in the `Hands-on lab/Resources/azurefunctionscode/ProcessDTUpdateToTSI.cs` file. A logic app is used to trigger digital twin updates for shipment progress.
 
 ## Requirements
 
@@ -259,13 +259,13 @@ Now we'll continue this exercise by defining a model for a storeroom using DTDL.
 
 5. Now we need to add StoreRoom as a relationship in the Factory model. Open the `Hands-on lab/Resources/models/factory.json` file, and add the following to the **contents** array:
 
-  ```JavaScript
-  {
-      "@type": "Relationship",
-      "name": "containsStoreRoom",
-      "target": "dtmi:com:contoso:storeroom;1"
-  }
-  ```
+    ```JavaScript
+    {
+        "@type": "Relationship",
+        "name": "containsStoreRoom",
+        "target": "dtmi:com:contoso:storeroom;1"
+    }
+    ```
 
 ### Task 2: Ontologies overview
 

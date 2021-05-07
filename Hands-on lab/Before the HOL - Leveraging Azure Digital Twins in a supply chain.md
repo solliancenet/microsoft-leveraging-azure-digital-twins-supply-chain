@@ -120,7 +120,7 @@ This ARM template will deploy the services necessary to support this lab. You ca
 
 Download the lab artifacts from GitHub.
 
-1. In a web browser, navigate to the [Leveraging Azure Digital Twins in a supply chain GitHub repo](https://github.com/solliancenet/microsoft-leveraging-azure-digital-twins-supply-chain).
+1. In a web browser, navigate to the [Leveraging Azure Digital Twins in a supply chain GitHub repo](https://github.com/microsoft/MCW-Leveraging-Azure-Digital-Twins-in-a-supply-chain).
 
 2. On the repo page, expand the **Code**, then select **Download ZIP**.
 

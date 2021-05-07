@@ -2,19 +2,7 @@
 
 Azure Digital Twins (ADT) is a platform as a service (PaaS) offering that enables creating knowledge graphs based on digital models of entire environments. These environments could be buildings, factories, farms, energy networks, railways, stadiums, and more—even entire cities. These digital models can help gain insights that drive better products, optimized operations, reduced costs, and breakthrough customer experiences. Azure Digital Twins facilitates asset connectivity, such as connecting IoT devices with existing business systems. ADT also offers a robust event system to build dynamic business logic and data processing. Integrate with Azure data, analytics, and AI services to help you track the past and then predict the future, all in a scalable and secure manner.
 
-Contoso Apparel is a large multinational clothing manufacturer. Their environment consists of several factories, warehouses, storefronts, and logistics infrastructure. Multiple telemetry points are measured to ensure the highest quality level in their products, such as temperature, vibration, location, and humidity. Of these readings, maintaining humidity within the range of x and y at all supply chain levels is the most critical. Due to mold issues, humidity has a direct correlation to the quality of the delivered consumer end-product.
-
-Contoso Apparel is looking to implement digital twins to model their existing supply chain environment end-to-end. Their goals are:
-
-1. To visualize the relationship between their processes, products, equipment, factories, shipping logistics, warehouses, and storefronts.
-
-2. To gain insight into the current state of the supply chain.
-
-3. Analyze historical data to track successful product deliveries or determine the root cause of unsuccessful deliveries.
-
-4. To automate mitigating measures should an anomalous event occur. For example, product manufacturing could be re-routed to a secondary 'failover' factory should there be an outage at the original facility.
-
-5. To model potential 'what if' process changes and determine their overall impact without experimenting with or impacting the current supply chain.
+Contoso Apparel is a large multinational clothing manufacturer. Their environment consists of several factories, warehouses, storefronts, and logistics infrastructure. Multiple telemetry points are measured to ensure the highest quality level in their products, such as temperature, vibration, location, and humidity. Of these readings, maintaining humidity within the range of x and y at all supply chain levels is the most critical. Due to mold issues, humidity has a direct correlation to the quality of the delivered consumer end-product. Contoso Apparel is looking to implement digital twins to model their existing supply chain environment end-to-end so that they can visualize their entire environment and gain insight into the current state of their assets.
 
 April 2021
 
