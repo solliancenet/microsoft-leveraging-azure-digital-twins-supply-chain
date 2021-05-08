@@ -38,7 +38,7 @@
       },
       "functionapp": {
         "name": "[concat(parameters('prefix'), 'DTFunctions')]",
-        "zipurl": "https://github.com/solliancenet/microsoft-leveraging-azure-digital-twins-supply-chain/raw/main/Hands-on%20lab/Resources/deployment/ARM/digital-twins-functions.zip"
+        "zipurl": "https://github.com/microsoft/MCW-Leveraging-Azure-Digital-Twins-in-a-supply-chain/raw/main/Hands-on%20lab/Resources/deployment/ARM/digital-twins-functions.zip"
       },
       "signalr": {
         "name": "[concat('SignalR', parameters('prefix'))]"
